@@ -13,7 +13,7 @@ export default function FeaturedRow({ products, onAddToCart }) {
     <section className="animate-fade-up mt-16">
       <div className="mx-auto flex max-w-6xl items-end justify-between gap-4 px-6">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ochre">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ochre-ink">
             Fresh on the shelf
           </p>
           <h2
@@ -24,7 +24,7 @@ export default function FeaturedRow({ products, onAddToCart }) {
         </div>
         <Link
           to="/product-list"
-          className="hidden font-mono text-[10px] uppercase tracking-widest text-navy/50 transition hover:text-ochre sm:block"
+          className="hidden font-mono text-[10px] uppercase tracking-widest text-navy/50 transition hover:text-ochre-ink sm:block"
         >
           View all &rarr;
         </Link>

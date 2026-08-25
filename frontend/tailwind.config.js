@@ -8,6 +8,7 @@ export default {
         cream: "#FBF7F0",
         paper: "#F2EEE4",
         ochre: "#E8A33D",
+        "ochre-ink": "#9A6210",
         rust: "#B33F2E",
         moss: "#4F6F52",
         category: {

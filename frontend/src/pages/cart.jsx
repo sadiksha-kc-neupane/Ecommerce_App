@@ -124,7 +124,7 @@ export default function Cart() {
                       </p>
                     </div>
 
-                    <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre">
+                    <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
                       ${lineTotal.toFixed(2)}
                     </p>
 

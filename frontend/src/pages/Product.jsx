@@ -69,7 +69,7 @@ export default function Product() {
 
       <main className="mx-auto max-w-4xl px-6 py-12">
         <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
-          <Link to="/product-list" className="transition hover:text-ochre">
+          <Link to="/product-list" className="transition hover:text-ochre-ink">
             Catalog
           </Link>{" "}
           / Detail
@@ -125,7 +125,7 @@ export default function Product() {
                 {product.productName}
               </h1>
 
-              <p className="mt-4 font-mono text-2xl font-semibold text-ochre">
+              <p className="mt-4 font-mono text-2xl font-semibold text-ochre-ink">
                 ${product.price}
               </p>
 

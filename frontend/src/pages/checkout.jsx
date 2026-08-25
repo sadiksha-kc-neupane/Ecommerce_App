@@ -69,7 +69,7 @@ export default function Checkout() {
             <p className="mt-2 font-mono text-xs text-navy/60">
               Order ID: {placedOrder.id}
             </p>
-            <p className="mt-1 font-mono text-sm font-semibold text-ochre">
+            <p className="mt-1 font-mono text-sm font-semibold text-ochre-ink">
               Total: ${Number(placedOrder.totalAmount).toFixed(2)}
             </p>
             <p className="mt-4 text-sm text-navy/70">

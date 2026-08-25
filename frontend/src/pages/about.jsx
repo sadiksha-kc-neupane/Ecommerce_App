@@ -7,7 +7,7 @@ function About() {
       <Navbar />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
-        <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-[#E07A5F]">
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-rust">
           About us
         </p>
         <h1
