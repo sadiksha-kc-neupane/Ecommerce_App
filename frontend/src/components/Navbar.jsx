@@ -1,13 +1,16 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { useCart } from "../context/CartContext.jsx"
 
 export default function Navbar() {
   const navigate = useNavigate()
   const token = localStorage.getItem("token")
+  const { cartCount, clearCart } = useCart()
   const [search, setSearch] = useState("")
 
   function handleLogout() {
     localStorage.removeItem("token")
+    clearCart()
     navigate("/signin")
   }
 
@@ -56,7 +59,11 @@ export default function Navbar() {
           <span className="font-mono text-xs uppercase tracking-widest text-[#FBF7F0]/85 transition hover:text-[#FBF7F0]">
             Cart
           </span>
-          <CartBadge />
+          {cartCount > 0 && (
+            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#E8A33D] font-mono text-[9px] font-semibold text-[#14213D]">
+              {cartCount}
+            </span>
+          )}
         </Link>
 
         {token ? (
@@ -84,17 +91,5 @@ export default function Navbar() {
         )}
       </div>
     </header>
-  )
-}
-
-// Reads cart count from localStorage cache if you keep one, otherwise
-// wire this up to your fetchCart() call and lift the count into context.
-function CartBadge() {
-  const count = Number(localStorage.getItem("cartCount") || 0)
-  if (!count) return null
-  return (
-    <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#E8A33D] font-mono text-[9px] font-semibold text-[#14213D]">
-      {count}
-    </span>
   )
 }

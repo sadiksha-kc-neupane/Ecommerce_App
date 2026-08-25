@@ -1,121 +1,234 @@
-import Navbar from "../components/navbar"
-import axios from "axios";
-import { useState } from "react";
+// 
 
 
-export default function CreateProduct(){
-    let[name , setName] = useState('')
-    let[price , setPrice] = useState('')
-    let[Qty , setQuantity] = useState('')
-    let[description , setDescription] = useState('')
-    let[image , setImage] = useState('')
 
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import Navbar from "../components/Navbar.jsx"
+import { createProduct } from "../lib/api.js"
 
-    async function sendDataToBackend(e){
-    e.preventDefault()
-    await axios.post("http://localhost:3000/product",{
-       name, price , Qty, description, image
-    })
+const CATEGORIES = ["electronics", "materials", "agriculture", "cosmetics"]
+const STATUSES = ["in_stock", "out_of_stock", "discontinued"]
+
+const initialForm = {
+  productName: "",
+  description: "",
+  price: "",
+  stock: "",
+  category: CATEGORIES[0],
+  status: "in_stock",
+  image: "", // maps to productImage on the backend
+}
+
+export default function CreateProduct() {
+  const navigate = useNavigate()
+  const [form, setForm] = useState(initialForm)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  function update(field, value) {
+    setForm((f) => ({ ...f, [field]: value }))
   }
-    
-    return(
-        <>
-        <Navbar/>
-        <div className="flex items-center justify-center p-12">
-        {/* Author: FormBold Team */}
-        <div className="mx-auto w-full max-w-[550px] bg-white">
-          <form onSubmit={sendDataToBackend}>
-            <div className="mb-5">
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError(null)
+
+    if (!form.productName || !form.price || !form.category) {
+      setError("Product name, price and category are required")
+      return
+    }
+    if (Number(form.price) <= 0) {
+      setError("Price must be greater than 0")
+      return
+    }
+    if (form.stock !== "" && Number(form.stock) < 0) {
+      setError("Stock can't be negative")
+      return
+    }
+
+    setLoading(true)
+    try {
+      await createProduct({
+        productName: form.productName,
+        description: form.description,
+        price: Number(form.price),
+        stock: form.stock === "" ? 0 : Number(form.stock),
+        category: form.category,
+        status: form.status,
+        image: form.image, // backend maps this to productImage
+      })
+      navigate("/user-dashboard")
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F2EEE4]">
+      <Navbar />
+
+      <div className="mx-auto max-w-xl px-6 py-12">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#14213D]/50">
+          New listing
+        </p>
+        <h1
+          className="mt-1 text-3xl text-[#14213D]"
+          style={{ fontFamily: "'Fraunces', serif" }}
+        >
+          Add a product
+        </h1>
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <div>
+            <label
+              htmlFor="productName"
+              className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+            >
+              Product name
+            </label>
+            <input
+              id="productName"
+              type="text"
+              required
+              value={form.productName}
+              onChange={(e) => update("productName", e.target.value)}
+              className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="description"
+              className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              rows={3}
+              value={form.description}
+              onChange={(e) => update("description", e.target.value)}
+              className="mt-2 block w-full resize-none rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
               <label
-                htmlFor="name"
-                className="mb-3 block text-base font-medium text-[#07074D]"
+                htmlFor="price"
+                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
               >
-                Name
+                Price ($)
               </label>
               <input
-                onChange={(e)=>setName(e.target.value)}
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Full Name"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-            <div className="mb-5">
-              <label
-                htmlFor="phone"
-                className="mb-3 block text-base font-medium text-[#07074D]"
-              >
-                Price
-              </label>
-              <input
-               onChange={(e)=>setPrice(e.target.value)}
+                id="price"
                 type="number"
-                name="phone"
-                id="phone"
-                placeholder="Enter your phone number"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-            <div className="mb-5">
-              <label
-                htmlFor="email"
-                className="mb-3 block text-base font-medium text-[#07074D]"
-              >
-                Quantity
-              </label>
-              <input
-                onChange={(e)=>setQuantity(e.target.value)}
-                type="number"
-                name="quantity"
-                id="email"
-                placeholder="Enter your email"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-            <div className="mb-5">
-              <label
-                htmlFor="email"
-                className="mb-3 block text-base font-medium text-[#07074D]"
-              >
-               Description
-              </label>
-              <input
-                onChange={(e)=>setDescription(e.target.value)}
-                type="text"
-                name="description"
-                id="email"
-                placeholder="Enter your email"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-            <div className="mb-5">
-              <label
-                htmlFor="email"
-                className="mb-3 block text-base font-medium text-[#07074D]"
-              >
-               Image
-              </label>
-              <input
-                onChange={(e)=>setImage(e.target.value)}
-                type="text"
-                name="image"
-                id="email"
-                placeholder="Enter your Image URL"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                min="0"
+                step="0.01"
+                required
+                value={form.price}
+                onChange={(e) => update("price", e.target.value)}
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
               />
             </div>
 
             <div>
-              <button className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                Register product
-              </button>
+              <label
+                htmlFor="stock"
+                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+              >
+                Stock
+              </label>
+              <input
+                id="stock"
+                type="number"
+                min="0"
+                value={form.stock}
+                onChange={(e) => update("stock", e.target.value)}
+                placeholder="0"
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+              />
             </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="category"
+                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+              >
+                Category
+              </label>
+              <select
+                id="category"
+                required
+                value={form.category}
+                onChange={(e) => update("category", e.target.value)}
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="status"
+                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+              >
+                Status
+              </label>
+              <select
+                id="status"
+                value={form.status}
+                onChange={(e) => update("status", e.target.value)}
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+              >
+                {STATUSES.map((s) => (
+                  <option key={s} value={s}>
+                    {s.replace("_", " ")}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="image"
+              className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+            >
+              Image URL
+            </label>
+            <input
+              id="image"
+              type="url"
+              value={form.image}
+              onChange={(e) => update("image", e.target.value)}
+              placeholder="https://..."
+              className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+            />
+          </div>
+
+          <p className="min-h-[1rem] font-mono text-xs text-[#B33F2E]">
+            {error || ""}
+          </p>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-md bg-[#14213D] py-3 font-mono text-xs uppercase tracking-widest text-[#FBF7F0] transition hover:bg-[#B33F2E] disabled:opacity-50"
+          >
+            {loading ? "Creating..." : "Create product"}
+          </button>
+        </form>
       </div>
-
-        </>
-    )
+    </div>
+  )
 }
-

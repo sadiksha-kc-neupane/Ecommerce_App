@@ -10,7 +10,7 @@ function Home() {
     useEffect(() => {
     async function fetchRecentProducts() {
       try {
-        const response = await axios.get("http://localhost:3000/fetch-product");
+        const response = await axios.get("http://localhost:5000/fetch-product");
         const products = response.data.data || [];
        setRecentProducts(products.slice(-4).reverse());
       } catch (error) {

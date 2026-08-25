@@ -1,0 +1,166 @@
+import { useEffect, useState } from "react"
+import { Link, Navigate } from "react-router-dom"
+import Navbar from "../components/Navbar.jsx"
+import Footer from "../components/Footer.jsx"
+import { fetchCart, removeFromCart } from "../lib/api.js"
+import { useCart } from "../context/CartContext.jsx"
+
+export default function Cart() {
+  const { refreshCart } = useCart()
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [removingId, setRemovingId] = useState(null)
+
+  const isLoggedIn = Boolean(localStorage.getItem("token"))
+
+  useEffect(() => {
+    if (!isLoggedIn) return
+
+    let cancelled = false
+
+    async function load() {
+      try {
+        const res = await fetchCart()
+        // response shape: { cart: { CartItems: [...] } } -- each CartItem
+        // has a nested Product via include: [Product] in cartController.js
+        if (!cancelled) setItems(res.cart?.CartItems || [])
+      } catch (err) {
+        if (!cancelled) setError(err.message)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [isLoggedIn])
+
+  async function handleRemove(cartItemId) {
+    setError(null)
+    try {
+      setRemovingId(cartItemId)
+      await removeFromCart(cartItemId)
+      setItems((prev) => prev.filter((item) => item.id !== cartItemId))
+      refreshCart()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setRemovingId(null)
+    }
+  }
+
+  const runningTotal = items.reduce(
+    (sum, item) => sum + Number(item.Product?.price) * item.quantity,
+    0
+  )
+
+  return (
+    <div className="min-h-screen bg-[#F2EEE4]">
+      <Navbar />
+
+      <main className="mx-auto max-w-3xl px-6 py-12">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#14213D]/50">
+          Your basket
+        </p>
+        <h1
+          className="mt-3 mb-8 text-3xl leading-tight text-[#14213D]"
+          style={{ fontFamily: "'Fraunces', serif" }}
+        >
+          Shopping cart
+        </h1>
+
+        {!isLoggedIn && <Navigate to="/signin" replace />}
+
+        {isLoggedIn && loading && (
+          <p className="font-mono text-sm text-[#14213D]/50">Loading cart...</p>
+        )}
+
+        {isLoggedIn && !loading && error && (
+          <div className="rounded-md bg-[#FBF7F0] p-10 text-center outline outline-1 -outline-offset-1 outline-[#14213D]/15">
+            <p className="font-mono text-sm text-[#B33F2E]">{error}</p>
+          </div>
+        )}
+
+        {isLoggedIn && !loading && !error && items.length === 0 && (
+          <div className="rounded-md bg-[#FBF7F0] p-10 text-center outline outline-1 -outline-offset-1 outline-[#14213D]/15">
+            <p className="text-[#14213D]/70">Your cart is empty.</p>
+            <Link
+              to="/product-list"
+              className="mt-4 inline-block rounded-sm bg-[#E8A33D] px-6 py-3 font-mono text-xs uppercase tracking-widest text-[#14213D] transition hover:bg-[#14213D] hover:text-[#FBF7F0]"
+            >
+              Browse the catalog
+            </Link>
+          </div>
+        )}
+
+        {isLoggedIn && !loading && items.length > 0 && (
+          <>
+            <ul className="flex flex-col gap-4">
+              {items.map((item) => {
+                const product = item.Product
+                const lineTotal = Number(product?.price) * item.quantity
+                return (
+                  <li
+                    key={item.id}
+                    className="flex items-center gap-4 rounded-md bg-[#FBF7F0] p-4 outline outline-1 -outline-offset-1 outline-[#14213D]/15"
+                  >
+                    <img
+                      src={product?.productImage || "https://placehold.co/96x96/F2EEE4/14213D?text=Bazario"}
+                      alt={product?.productName}
+                      className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className="truncate text-lg text-[#14213D]"
+                        style={{ fontFamily: "'Fraunces', serif" }}
+                      >
+                        {product?.productName}
+                      </p>
+                      <p className="mt-1 font-mono text-xs text-[#14213D]/60">
+                        ${Number(product?.price).toFixed(2)} each · Qty:{" "}
+                        {item.quantity}
+                      </p>
+                    </div>
+
+                    <p className="flex-shrink-0 font-mono text-sm font-semibold text-[#E8A33D]">
+                      ${lineTotal.toFixed(2)}
+                    </p>
+
+                    <button
+                      onClick={() => handleRemove(item.id)}
+                      disabled={removingId === item.id}
+                      className="flex-shrink-0 rounded-sm border border-[#B33F2E]/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-[#B33F2E] transition hover:bg-[#B33F2E] hover:text-[#FBF7F0] disabled:opacity-50"
+                    >
+                      {removingId === item.id ? "Removing..." : "Remove"}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-md bg-[#FBF7F0] p-5 outline outline-1 -outline-offset-1 outline-[#14213D]/15">
+              <p className="font-mono text-xs uppercase tracking-widest text-[#14213D]/60">
+                Total ({items.reduce((n, i) => n + i.quantity, 0)} items)
+              </p>
+              <p className="font-mono text-xl font-semibold text-[#E8A33D]">
+                ${runningTotal.toFixed(2)}
+              </p>
+              <Link
+                to="/checkout"
+                className="rounded-sm bg-[#E8A33D] px-6 py-3 font-mono text-xs uppercase tracking-widest text-[#14213D] transition hover:bg-[#14213D] hover:text-[#FBF7F0]"
+              >
+                Checkout
+              </Link>
+            </div>
+          </>
+        )}
+      </main>
+
+      <Footer />
+    </div>
+  )
+}

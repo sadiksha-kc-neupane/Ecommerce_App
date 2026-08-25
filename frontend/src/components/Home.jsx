@@ -6,8 +6,10 @@ import ProductGrid from "./ProductGrid.jsx"
 import TrustBadges from "./TrustBadges.jsx"
 import Footer from "../components/Footer.jsx"
 import { fetchProducts, addToCart } from "../lib/api.js"
+import { useCart } from "../context/CartContext.jsx"
 
 export default function Home() {
+  const { refreshCart } = useCart()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -24,6 +26,7 @@ export default function Home() {
   async function handleAddToCart(productId) {
     try {
       await addToCart(productId, 1)
+      refreshCart()
       setToast("Added to cart")
       setTimeout(() => setToast(null), 2000)
     } catch (err) {

@@ -1,85 +1,65 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
+import Navbar from "../components/Navbar.jsx"
+import CategoryFilter from "../components/CategoryFilter.jsx"
+import ProductGrid from "../components/ProductGrid.jsx"
+import Footer from "../components/Footer.jsx"
+import { fetchProducts } from "../lib/api.js"
 
-function Productlist() {
-  const [product, setProduct] = useState([]);
+export default function ProductList() {
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get("q") || ""
 
-  async function fetchProduct() {
-    try {
-      const response = await axios.get("http://localhost:3000/fetch-product");
-      setProduct(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [activeCategory, setActiveCategory] = useState("all")
 
   useEffect(() => {
-    fetchProduct();
-    
-  }, []);
+    fetchProducts()
+      .then((res) => setProducts(res.data || []))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
-  async function deleteProduct(id) {
-    try {
-      const response = await axios.delete(
-        `http://localhost:3000/delete-product/${id}`
-      );
-
-      if (response.status === 200) {
-        alert("Deleted successfully");
-        fetchProduct(); // Refresh list after deleting
-      }
-    } catch (error) {
-      alert("Something went wrong. Try again.");
-    }
-  }
+  const visibleProducts = products.filter((p) => {
+    const matchesCategory =
+      activeCategory === "all" || p.category === activeCategory
+    const matchesQuery = p.productName
+      ?.toLowerCase()
+      .includes(query.toLowerCase())
+    return matchesCategory && matchesQuery
+  })
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-        Product List
-      </h1>
+    <div className="min-h-screen bg-[#F2EEE4]">
+      <Navbar />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {product.map((products) => (
-          <div
-            key={products.id}
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300"
-          >
-            <img src={products.image} />
+      <header className="px-6 pt-10">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#14213D]/50">
+          Catalog
+        </p>
+        <h1
+          className="mt-1 text-3xl text-[#14213D]"
+          style={{ fontFamily: "'Fraunces', serif" }}
+        >
+          {query ? `Results for "${query}"` : "Browse everything"}
+        </h1>
+      </header>
 
-            <div className="flex flex-col gap-3">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                {products.name}
-              </h2>
+      <CategoryFilter activeCategory={activeCategory} onChange={setActiveCategory} />
 
-              <p className="text-lg text-green-600 font-bold">
-                ${products.price}
-              </p>
-             <p className="text-lg text-green-600 font-bold">
-                {products.description}
-              </p>
-                 <p className="text-lg text-green-600 font-bold">
-                {products.Qty}
-              </p>
-             
-              <button
-                onClick={() => deleteProduct(products.id)}
-                className="mt-4 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-medium transition"
-              >
-                Delete Product
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <main className="py-6">
+        <ProductGrid products={visibleProducts} loading={loading} error={error} />
+      </main>
 
-      {product.length === 0 && (
-        <div className="text-center text-gray-500 text-xl mt-10">
-          No products found.
-        </div>
+      {!loading && !error && visibleProducts.length === 0 && products.length > 0 && (
+        <p className="px-6 pb-10 font-mono text-sm text-[#14213D]/50">
+          No matches for this search or category.
+        </p>
       )}
-    </div>
-  );
-}
 
-export default Productlist;
+      <Footer />
+    </div>
+  )
+}

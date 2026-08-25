@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react'
+import { fetchProducts, deleteProduct as deleteProductApi } from "../lib/api.js"
 // import { Link } from 'react-router-dom';
 
 function UserDashboardProducts  () {
@@ -10,28 +10,23 @@ function UserDashboardProducts  () {
     //fetching all products
     async function fetchDashboardProducts() {
      try {
-       const response = await axios.get("http://localhost:3000/fetch-product");
-       const products = response.data.data || [];
+       const data = await fetchProducts();
+       const products = data.data || [];
        setDashboardProducts(products.slice(-4).reverse());
      } catch (error) {
        console.error(error);
      }
     }
-    
-    
+
+
 //delete product with id
 async function deleteProduct(id) {
     try {
-        const response = await axios.delete( //server hit 
-            `http://localhost:3000/delete-product/${id}`
-        );
-        
-        if (response.status === 200) {
-            alert("Deleted successfully");
-            fetchDashboardProducts(); // Refresh list after deleting
-        }
+        await deleteProductApi(id);
+        alert("Deleted successfully");
+        fetchDashboardProducts(); // Refresh list after deleting
     } catch (error) {
-      alert("Something went wrong. Try again.", error);
+      alert(error.message || "Something went wrong. Try again.");
     }
 }
 

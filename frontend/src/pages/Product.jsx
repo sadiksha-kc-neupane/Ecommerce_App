@@ -1,388 +1,199 @@
-import Navbar from "../components/navbar";
+import { useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import Navbar from "../components/Navbar.jsx"
+import Footer from "../components/Footer.jsx"
+import { CATEGORY_COLORS } from "../lib/categories.js"
+import { fetchSingleProduct, addToCart } from "../lib/api.js"
+import { useCart } from "../context/CartContext.jsx"
 
-function Product() {
+export default function Product() {
+  const { refreshCart } = useCart()
+  const { id } = useParams()
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [toast, setToast] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function load() {
+      try {
+        const res = await fetchSingleProduct(id)
+        if (cancelled) return
+        // backend returns an array from findAll -- normalize to a single object
+        const data = Array.isArray(res) ? res[0] : res?.data ?? res
+        setError(data ? null : "Product not found")
+        setProduct(data || null)
+      } catch (err) {
+        if (cancelled) return
+        setError(err.message)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [id])
+
+  function showToast(message, ms = 2500) {
+    setToast(message)
+    setTimeout(() => setToast(null), ms)
+  }
+
+  async function handleAddToCart() {
+    try {
+      await addToCart(product.id, quantity)
+      refreshCart()
+      showToast("Added to cart")
+    } catch (err) {
+      if (err.message.toLowerCase().includes("token") || err.message.includes("401")) {
+        showToast("Please sign in to add items to your cart")
+      } else {
+        showToast(err.message)
+      }
+    }
+  }
+
+  const stock = Number(product?.stock) || 0
+  const outOfStock = stock <= 0 || product?.status === "out_of_stock"
+  const dotColor = CATEGORY_COLORS[product?.category] || "#14213D"
+
   return (
-    <div>
+    <div className="min-h-screen bg-[#F2EEE4]">
       <Navbar />
-      <div>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        />
-        {/* wrapper */}
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* recent products */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Recent products
-              </h2>
-              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors bg-gray-100 text-gray-700">
-                4 items
-              </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              <div className="rounded-lg bg-white shadow-sm border hover:shadow-md transition-shadow">
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      alt="product"
-                      className="w-full h-48 object-cover rounded-t-lg"
-                      src="https://plus.unsplash.com/premium_photo-1664392147011-2a720f214e01?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600"
-                    />
-                  </a>
-                  <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors absolute top-2 right-2 bg-green-100 text-green-800">
-                    Active
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <a href="#">
-                      <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
-                        Tesla Model 3 - Premium Electric Car
-                      </h3>
-                    </a>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm gap-1 text-gray-600">
-                      <i className="fas fa-map-marker-alt text-xs text-gray-500" />
-                      San Francisco, CA
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-[#E26038]">
-                        $89
-                      </span>
-                      <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs">
-                        Cars
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t">
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-eye text-xs" />
-                          124
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-heart text-xs" />8
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-lg bg-white shadow-sm border hover:shadow-md transition-shadow">
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      alt="product"
-                      className="w-full h-48 object-cover rounded-t-lg"
-                      src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600"
-                    />
-                  </a>
-                  <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors absolute top-2 right-2 bg-green-100 text-green-800">
-                    Active
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <a href="#">
-                      <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
-                        Tesla Model 3 - Premium Electric Car
-                      </h3>
-                    </a>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm gap-1 text-gray-600">
-                      <i className="fas fa-map-marker-alt text-xs text-gray-500" />
-                      San Francisco, CA
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-[#E26038]">
-                        $89
-                      </span>
-                      <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs">
-                        Cars
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t">
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-eye text-xs" />
-                          124
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-heart text-xs" />8
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-lg bg-white shadow-sm border hover:shadow-md transition-shadow">
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      alt="product"
-                      className="w-full h-48 object-cover rounded-t-lg"
-                      src="https://plus.unsplash.com/premium_photo-1679913792906-13ccc5c84d44?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600"
-                    />
-                  </a>
-                  <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors absolute top-2 right-2 bg-green-100 text-green-800">
-                    Active
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <a href="#">
-                      <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
-                        Tesla Model 3 - Premium Electric Car
-                      </h3>
-                    </a>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm gap-1 text-gray-600">
-                      <i className="fas fa-map-marker-alt text-xs text-gray-500" />
-                      San Francisco, CA
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-[#E26038]">
-                        $89
-                      </span>
-                      <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs">
-                        Cars
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t">
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-eye text-xs" />
-                          124
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-heart text-xs" />8
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-lg bg-white shadow-sm border hover:shadow-md transition-shadow">
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      alt="product"
-                      className="w-full h-48 object-cover rounded-t-lg"
-                      src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHByb2R1Y3R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600"
-                    />
-                  </a>
-                  <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors absolute top-2 right-2 bg-green-100 text-green-800">
-                    Active
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <a href="#">
-                      <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
-                        Tesla Model 3 - Premium Electric Car
-                      </h3>
-                    </a>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm gap-1 text-gray-600">
-                      <i className="fas fa-map-marker-alt text-xs text-gray-500" />
-                      San Francisco, CA
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-[#E26038]">
-                        $89
-                      </span>
-                      <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs">
-                        Cars
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t">
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-eye text-xs" />
-                          124
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <i className="far fa-heart text-xs" />8
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* top products */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Top products
-              </h2>
-              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors bg-gray-100 text-gray-700">
-                3 bookings
-              </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-lg bg-white shadow-sm border">
-                <div className="p-4">
-                  <div className="flex gap-4">
-                    <img
-                      alt
-                      className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
-                      src="https://images.unsplash.com/photo-1519669011783-4eaa95fa1b7d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fHByb2R1Y3R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">
-                          BMW X5 SUV
-                        </h3>
-                        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs bg-green-100 text-green-800">
-                          Active
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6">
-                            <img
-                              className="aspect-square h-full w-full object-cover"
-                              src="https://plus.unsplash.com/premium_photo-1683121366070-5ceb7e007a97?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=200"
-                            />
-                          </span>
-                          <span className="text-sm text-gray-600 truncate">
-                            Travis Lynch
-                          </span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className="far fa-calendar-alt text-xs text-gray-500 mr-2" />
-                          <span className="truncate">
-                            Dec 28, 2024 - Dec 30, 2024
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-lg font-bold text-[#E26038]">
-                            $267
-                          </span>
-                          <a href="#">
-                            <button className="inline-flex items-center justify-center gap-2 transition-colors border h-9 rounded-md px-3 text-xs">
-                              View Details
-                            </button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-lg bg-white shadow-sm border">
-                <div className="p-4">
-                  <div className="flex gap-4">
-                    <img
-                      alt
-                      className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
-                      src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODh8fHByb2R1Y3R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">
-                          BMW X5 SUV
-                        </h3>
-                        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs bg-green-100 text-green-800">
-                          Active
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6">
-                            <img
-                              className="aspect-square h-full w-full object-cover"
-                              src="https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=200"
-                            />
-                          </span>
-                          <span className="text-sm text-gray-600 truncate">
-                            Glen McCormick
-                          </span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className="far fa-calendar-alt text-xs text-gray-500 mr-2" />
-                          <span className="truncate">
-                            Dec 28, 2024 - Dec 30, 2024
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-lg font-bold text-[#E26038]">
-                            $267
-                          </span>
-                          <a href="#">
-                            <button className="inline-flex items-center justify-center gap-2 transition-colors border h-9 rounded-md px-3 text-xs">
-                              View Details
-                            </button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-lg bg-white shadow-sm border">
-                <div className="p-4">
-                  <div className="flex gap-4">
-                    <img
-                      alt
-                      className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
-                      src="https://plus.unsplash.com/premium_photo-1679513691641-9aedddc94f96?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTA5fHxwcm9kdWN0fGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">
-                          BMW X5 SUV
-                        </h3>
-                        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors text-xs bg-green-100 text-green-800">
-                          Active
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6">
-                            <img
-                              className="aspect-square h-full w-full object-cover"
-                              src="https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=200"
-                            />
-                          </span>
-                          <span className="text-sm text-gray-600 truncate">
-                            Fanny Wade
-                          </span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <i className="far fa-calendar-alt text-xs text-gray-500 mr-2" />
-                          <span className="truncate">
-                            Dec 28, 2024 - Dec 30, 2024
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-lg font-bold text-[#E26038]">
-                            $267
-                          </span>
-                          <a href="#">
-                            <button className="inline-flex items-center justify-center gap-2 transition-colors border h-9 rounded-md px-3 text-xs">
-                              View Details
-                            </button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-export default Product;
+      <main className="mx-auto max-w-4xl px-6 py-12">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#14213D]/50">
+          <Link to="/product-list" className="transition hover:text-[#E8A33D]">
+            Catalog
+          </Link>{" "}
+          / Detail
+        </p>
+
+        {loading && (
+          <p className="mt-8 font-mono text-sm text-[#14213D]/50">Loading product...</p>
+        )}
+
+        {!loading && error && (
+          <div className="mt-8 rounded-md bg-[#FBF7F0] p-10 text-center outline outline-1 -outline-offset-1 outline-[#14213D]/15">
+            <p className="font-mono text-sm text-[#B33F2E]">{error}</p>
+            <Link
+              to="/product-list"
+              className="mt-4 inline-block rounded-sm bg-[#14213D] px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0] transition hover:bg-[#E8A33D] hover:text-[#14213D]"
+            >
+              Back to catalog
+            </Link>
+          </div>
+        )}
+
+        {!loading && product && (
+          <div className="mt-6 grid gap-8 md:grid-cols-2">
+            <div className="overflow-hidden rounded-md bg-[#FBF7F0] outline outline-1 -outline-offset-1 outline-[#14213D]/15">
+              <img
+                src={product.productImage || "https://placehold.co/600x600/F2EEE4/14213D?text=Bazario"}
+                alt={product.productName}
+                className="h-full max-h-[480px] w-full object-cover"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-[#14213D]/50">
+                <span
+                  className="inline-block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: dotColor }}
+                />
+                {product.category}
+                <span
+                  className={`ml-2 rounded-full px-2 py-0.5 ${
+                    outOfStock
+                      ? "bg-[#B33F2E]/10 text-[#B33F2E]"
+                      : "bg-[#4F6F52]/10 text-[#4F6F52]"
+                  }`}
+                >
+                  {outOfStock ? "Out of stock" : `${stock} in stock`}
+                </span>
+              </div>
+
+              <h1
+                className="mt-3 text-3xl leading-tight text-[#14213D]"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                {product.productName}
+              </h1>
+
+              <p className="mt-4 font-mono text-2xl font-semibold text-[#E8A33D]">
+                ${product.price}
+              </p>
+
+              <p className="mt-5 text-sm leading-relaxed text-[#14213D]/70">
+                {product.description || "No description available."}
+              </p>
+
+              <div className="mt-auto pt-8">
+                <label
+                  htmlFor="quantity"
+                  className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+                >
+                  Quantity
+                </label>
+                <div className="mt-2 flex items-center gap-4">
+                  <div className="flex items-center rounded-md bg-[#FBF7F0] outline outline-1 -outline-offset-1 outline-[#14213D]/15">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      disabled={outOfStock || quantity <= 1}
+                      className="px-3 py-2 font-mono text-sm text-[#14213D] disabled:text-[#14213D]/30"
+                    >
+                      -
+                    </button>
+                    <span className="w-10 text-center font-mono text-sm text-[#14213D]">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
+                      disabled={outOfStock || quantity >= stock}
+                      className="px-3 py-2 font-mono text-sm text-[#14213D] disabled:text-[#14213D]/30"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    disabled={outOfStock}
+                    className="flex-1 rounded-sm bg-[#E8A33D] px-6 py-3 font-mono text-xs uppercase tracking-widest text-[#14213D] transition hover:bg-[#14213D] hover:text-[#FBF7F0] disabled:cursor-not-allowed disabled:bg-[#14213D]/20 disabled:text-[#14213D]/40"
+                  >
+                    {outOfStock ? "Out of stock" : "Add to cart"}
+                  </button>
+                </div>
+                <p className="min-h-[1rem] mt-2 font-mono text-xs text-[#B33F2E]">
+                  {""}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      <Footer />
+
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-sm bg-[#14213D] px-5 py-3 font-mono text-xs uppercase tracking-widest text-[#FBF7F0] shadow-lg">
+          {toast}
+          {toast.toLowerCase().includes("sign in") && (
+            <Link to="/signin" className="text-[#E8A33D] underline">
+              Sign in
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}

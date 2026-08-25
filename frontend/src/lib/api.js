@@ -1,13 +1,14 @@
 // Central API wrapper -- every page imports from here instead of
 // hardcoding fetch() calls and the backend base URL everywhere.
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
 
 function getToken() {
   return localStorage.getItem("token")
 }
 
 async function request(path, { method = "GET", body, auth = false } = {}) {
+    // console.log(path)
   const headers = { "Content-Type": "application/json" }
   if (auth) {
     const token = getToken()
@@ -29,8 +30,8 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
 }
 
 // ---- auth ----
-export const registerUser = (payload) => request("/register", { method: "POST", body: payload })
-export const loginUser = (payload) => request("/login", { method: "POST", body: payload })
+export const registerUser = (payload) => request("/auth/register", { method: "POST", body: payload })
+export const loginUser = (payload) => request("/auth/login", { method: "POST", body: payload })
 
 // ---- products ----
 export const fetchProducts = () => request("/fetch-product")
@@ -50,3 +51,6 @@ export const fetchOrders = () => request("/orders", { auth: true })
 export const fetchSingleOrder = (id) => request(`/orders/${id}`, { auth: true })
 export const buyProduct = (payload) => request("/product/buy", { method: "POST", body: payload, auth: true })
 export const cancelOrder = (id) => request(`/product/cancel/${id}`, { method: "POST", auth: true })
+
+// ---- users ----
+export const fetchUsers = () => request("/fetch-users", { auth: true })

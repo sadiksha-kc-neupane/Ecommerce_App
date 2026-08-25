@@ -21,6 +21,7 @@
 // export default App;
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./context/CartContext.jsx";
 import Contact from "./pages/contact";
 import About from "./pages/about";
 import Home from "./pages/home";
@@ -30,13 +31,15 @@ import Forgot from "./pages/forgotPassword";
 import Otp from "./pages/otp";
 import Product from "./pages/Product";
 import CreateProduct from "./pages/create-Product";
-import Userlist from "./pages/users";
 import Productlist from "./pages/product-list";
 import UserDashboard from "./pages/user-dashboard";
+import Checkout from "./pages/checkout";
+import Cart from "./pages/cart";
 
 function App() {
   return (
-    <BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -46,13 +49,17 @@ function App() {
         <Route path="/forgotPassword" element={<Forgot />}/>
         <Route path="/otp" element={<Otp />} />
         <Route path="/product" element={<Product />} />
+        <Route path="/product/:id" element={<Product />} />
         <Route path="/create-Product" element={<CreateProduct/>}/>
-        <Route path="/fetch-users" element={<Userlist/>}/>
+        <Route path="/product-list" element={<Productlist/>}/>
         <Route path="/fetch-products" element={<Productlist/>}/>
         <Route path="/user-dashboard" element={<UserDashboard/>}/>
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/:error" element={<h2>Error not found</h2>} />
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 

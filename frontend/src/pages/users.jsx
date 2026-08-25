@@ -1,16 +1,19 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
+import { fetchUsers } from "../lib/api.js"
 
 function Userlist(){
     const[users,setUsers] = useState([])
     async function fetchUser(){
-    const response =  await axios.get("http://localhost:3000/fetch-users")
-    setUsers(response.data.data)
+    try {
+        const data = await fetchUsers()
+        setUsers(data.data || [])
+    } catch (error) {
+        console.error(error)
+    }
     }
     useEffect(function(){
         fetchUser()
     },[])
-    console.log(users)
     return (
         <div>
             {users.map(function(user)

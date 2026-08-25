@@ -1,35 +1,23 @@
-import { Link } from "react-router-dom";
 import Navbar from "../components/navbar";
+import Footer from "../components/Footer";
 
 function Forgot() {
   return (
-    <div>
+    <div className="flex min-h-screen flex-col bg-[#FBF7F0]">
       <Navbar />
-      <div className="flex items-center justify-center p-12">
-        {/* Author: FormBold Team */}
-        <div className="mx-auto w-full max-w-[550px] bg-white">
-          <form>
-            <div className="mb-5">
-              <label className="mb-5 block text-base font-semibold text-[#07074D] sm:text-xl">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Enter your email"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-
-            <Link to="/otp">
-              <button className="hover:shadow-form w-full rounded-md bg-[#31bd4a] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                Send OTP
-              </button>
-            </Link>
-          </form>
-        </div>
-      </div>
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 py-12 text-center">
+        <h1
+          className="mb-3 text-3xl font-semibold text-[#14213D]"
+          style={{ fontFamily: "'Fraunces', serif" }}
+        >
+          Password reset — coming soon
+        </h1>
+        <p className="text-slate-600">
+          Password reset isn&apos;t available yet. This page will be enabled
+          once the feature ships.
+        </p>
+      </main>
+      <Footer />
     </div>
   );
 }
