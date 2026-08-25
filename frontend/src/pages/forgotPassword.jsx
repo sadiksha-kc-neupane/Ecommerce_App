@@ -3,12 +3,11 @@ import Footer from "../components/Footer";
 
 function Forgot() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#FBF7F0]">
+    <div className="flex min-h-screen flex-col bg-cream">
       <Navbar />
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 py-12 text-center">
         <h1
-          className="mb-3 text-3xl font-semibold text-[#14213D]"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="mb-3 text-3xl font-semibold text-navy font-display"
         >
           Password reset — coming soon
         </h1>

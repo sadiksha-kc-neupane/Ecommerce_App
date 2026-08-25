@@ -2,29 +2,56 @@ import ProductCard from "./ProductCard.jsx"
 
 export default function ProductGrid({ products, loading, error, onAddToCart }) {
   if (loading) {
-    return <p className="px-6 font-mono text-sm text-[#14213D]/50">Loading catalog...</p>
+    return (
+      <div className="grid grid-cols-2 gap-4 px-6 sm:grid-cols-3 lg:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="animate-pulse rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/10"
+          >
+            <div className="h-40 rounded-t-md bg-navy/5" />
+            <div className="flex flex-col gap-2 p-4">
+              <div className="h-2 w-16 rounded-full bg-navy/10" />
+              <div className="h-3 w-3/4 rounded-full bg-navy/10" />
+              <div className="mt-2 h-4 w-1/3 rounded-full bg-navy/10" />
+            </div>
+          </div>
+        ))}
+      </div>
+    )
   }
 
   if (error) {
     return (
-      <p className="px-6 font-mono text-sm text-[#B33F2E]">
-        Couldn't load products: {error}
-      </p>
+      <div className="mx-auto max-w-md rounded-md bg-cream p-10 text-center outline outline-1 -outline-offset-1 outline-rust/30">
+        <p className="font-mono text-sm text-rust">
+          Couldn&apos;t load products: {error}
+        </p>
+      </div>
     )
   }
 
   if (!products.length) {
     return (
-      <p className="px-6 font-mono text-sm text-[#14213D]/50">
-        Nothing in this category yet.
-      </p>
+      <div className="mx-auto max-w-md rounded-md border border-dashed border-navy/25 p-10 text-center">
+        <p className="text-navy/60">Nothing on this shelf yet.</p>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-navy/40">
+          Check back soon
+        </p>
+      </div>
     )
   }
 
   return (
     <div className="grid grid-cols-2 gap-4 px-6 sm:grid-cols-3 lg:grid-cols-4">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+      {products.map((product, i) => (
+        <div
+          key={product.id}
+          className="animate-fade-up"
+          style={{ animationDelay: `${Math.min(i, 11) * 60}ms` }}
+        >
+          <ProductCard product={product} onAddToCart={onAddToCart} />
+        </div>
       ))}
     </div>
   )

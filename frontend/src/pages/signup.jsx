@@ -129,18 +129,17 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col justify-center bg-[#14213D] px-6 py-12 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center bg-navy px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#E8A33D] font-mono text-[10px] text-[#E8A33D]">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-ochre font-mono text-[10px] text-ochre">
           Logo
         </span>
         <h2
-          className="mt-8 text-center text-3xl text-[#FBF7F0]"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="mt-8 text-center text-3xl text-cream font-display"
         >
           Create your account
         </h2>
-        <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-[#FBF7F0]/40">
+        <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-cream/40">
           Bazario
         </p>
       </div>
@@ -150,7 +149,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="username"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
             >
               Username
             </label>
@@ -162,7 +161,7 @@ export default function Signup() {
                 autoComplete="username"
                 value={form.username}
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                className="block w-full rounded-md bg-[#FBF7F0]/5 px-3 py-2 text-sm text-[#FBF7F0] outline outline-1 -outline-offset-1 outline-[#FBF7F0]/15 placeholder:text-[#FBF7F0]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -170,7 +169,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="email"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
             >
               Email address
             </label>
@@ -182,7 +181,7 @@ export default function Signup() {
                 autoComplete="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="block w-full rounded-md bg-[#FBF7F0]/5 px-3 py-2 text-sm text-[#FBF7F0] outline outline-1 -outline-offset-1 outline-[#FBF7F0]/15 placeholder:text-[#FBF7F0]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -190,7 +189,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="password"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
             >
               Password
             </label>
@@ -202,7 +201,7 @@ export default function Signup() {
                 autoComplete="new-password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="block w-full rounded-md bg-[#FBF7F0]/5 px-3 py-2 text-sm text-[#FBF7F0] outline outline-1 -outline-offset-1 outline-[#FBF7F0]/15 placeholder:text-[#FBF7F0]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -210,7 +209,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
             >
               Confirm password
             </label>
@@ -222,27 +221,27 @@ export default function Signup() {
                 autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="block w-full rounded-md bg-[#FBF7F0]/5 px-3 py-2 text-sm text-[#FBF7F0] outline outline-1 -outline-offset-1 outline-[#FBF7F0]/15 placeholder:text-[#FBF7F0]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
 
           {error && (
-            <p className="font-mono text-xs text-[#E8A33D]">{error}</p>
+            <p className="font-mono text-xs text-ochre">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center rounded-md bg-[#E8A33D] px-3 py-2 font-mono text-xs uppercase tracking-widest text-[#14213D] transition hover:bg-[#FBF7F0] disabled:opacity-50"
+            className="flex w-full justify-center rounded-md bg-ochre px-3 py-2 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-cream disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
 
-        <p className="mt-8 text-center font-mono text-xs text-[#FBF7F0]/50">
+        <p className="mt-8 text-center font-mono text-xs text-cream/50">
           Already have an account?{" "}
-          <Link to="/signin" className="font-semibold text-[#E8A33D] hover:text-[#FBF7F0]">
+          <Link to="/signin" className="font-semibold text-ochre hover:text-cream">
             Sign in
           </Link>
         </p>

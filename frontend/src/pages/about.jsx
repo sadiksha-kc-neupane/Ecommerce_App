@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 
 function About() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#FBF7F0]">
+    <div className="flex min-h-screen flex-col bg-cream">
       <Navbar />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
@@ -11,8 +11,7 @@ function About() {
           About us
         </p>
         <h1
-          className="mb-8 text-4xl font-semibold text-[#14213D]"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="mb-8 text-4xl font-semibold text-navy font-display"
         >
           Bazario — everything on one shelf
         </h1>
@@ -46,9 +45,9 @@ function About() {
           ].map((cat) => (
             <div
               key={cat.title}
-              className="rounded-lg border border-dashed border-[#14213D]/30 bg-white p-4"
+              className="rounded-lg border border-dashed border-navy/30 bg-white p-4"
             >
-              <p className="font-mono text-xs uppercase tracking-widest text-[#14213D]">
+              <p className="font-mono text-xs uppercase tracking-widest text-navy">
                 {cat.title}
               </p>
               <p className="mt-1 text-sm text-slate-600">{cat.note}</p>
@@ -56,7 +55,7 @@ function About() {
           ))}
         </div>
 
-        <div className="mt-10 rounded-lg border border-[#14213D]/15 bg-white p-5 font-mono text-xs uppercase tracking-widest text-slate-500">
+        <div className="mt-10 rounded-lg border border-navy/15 bg-white p-5 font-mono text-xs uppercase tracking-widest text-slate-500">
           Shelf-tag inventory · Fair prices · Restocked weekly
         </div>
       </main>

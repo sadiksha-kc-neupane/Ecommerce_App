@@ -22,45 +22,44 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-[#14213D] text-[#FBF7F0]">
+    <header className="sticky top-0 z-40 bg-navy text-cream">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-6 py-3">
         <Link
           to="/"
-          className="flex items-center gap-2"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="flex items-center gap-2 font-display"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8A33D] font-mono text-[9px] text-[#E8A33D]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-ochre font-mono text-[9px] text-ochre">
             Logo
           </span>
           <span className="text-lg">Bazario</span>
         </Link>
 
-        <nav className="hidden gap-5 font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/85 md:flex">
-          <Link to="/" className="transition hover:text-[#FBF7F0]">Home</Link>
-          <Link to="/product-list" className="transition hover:text-[#FBF7F0]">Catalog</Link>
-          <Link to="/about" className="transition hover:text-[#FBF7F0]">About</Link>
-          <Link to="/contact" className="transition hover:text-[#FBF7F0]">Contact</Link>
+        <nav className="hidden gap-5 font-mono text-[11px] uppercase tracking-widest text-cream/85 md:flex">
+          <Link to="/" className="transition hover:text-cream">Home</Link>
+          <Link to="/product-list" className="transition hover:text-cream">Catalog</Link>
+          <Link to="/about" className="transition hover:text-cream">About</Link>
+          <Link to="/contact" className="transition hover:text-cream">Contact</Link>
         </nav>
 
         <form
           onSubmit={handleSearchSubmit}
-          className="order-last flex w-full items-center gap-2 rounded-md border border-[#FBF7F0]/25 bg-[#FBF7F0]/10 px-3 py-1.5 sm:order-none sm:ml-auto sm:w-56"
+          className="order-last flex w-full items-center gap-2 rounded-md border border-cream/25 bg-cream/10 px-3 py-1.5 sm:order-none sm:ml-auto sm:w-56"
         >
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search products"
-            className="w-full bg-transparent text-xs text-[#FBF7F0] placeholder:text-[#FBF7F0]/40 outline-none"
+            className="w-full bg-transparent text-xs text-cream placeholder:text-cream/40 outline-none"
           />
         </form>
 
         <Link to="/cart" aria-label="Cart" className="relative">
-          <span className="font-mono text-xs uppercase tracking-widest text-[#FBF7F0]/85 transition hover:text-[#FBF7F0]">
+          <span className="font-mono text-xs uppercase tracking-widest text-cream/85 transition hover:text-cream">
             Cart
           </span>
           {cartCount > 0 && (
-            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#E8A33D] font-mono text-[9px] font-semibold text-[#14213D]">
+            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-ochre font-mono text-[9px] font-semibold text-navy">
               {cartCount}
             </span>
           )}
@@ -69,7 +68,7 @@ export default function Navbar() {
         {token ? (
           <button
             onClick={handleLogout}
-            className="font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/70 transition hover:text-[#FBF7F0]"
+            className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
           >
             Log out
           </button>
@@ -77,13 +76,13 @@ export default function Navbar() {
           <>
             <Link
               to="/signin"
-              className="font-mono text-[11px] uppercase tracking-widest text-[#FBF7F0]/70 transition hover:text-[#FBF7F0]"
+              className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="rounded-sm bg-[#E8A33D] px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest text-[#14213D] transition hover:bg-[#FBF7F0]"
+              className="rounded-sm bg-ochre px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest text-navy transition hover:bg-cream"
             >
               Sign up
             </Link>

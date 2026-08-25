@@ -24,7 +24,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext.jsx";
 import Contact from "./pages/contact";
 import About from "./pages/about";
-import Home from "./pages/home";
+import Home from "./components/Home.jsx";
 import Signup from "./pages/signup";
 import Signin from "./pages/signin";
 import Forgot from "./pages/forgotPassword";

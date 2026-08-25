@@ -67,16 +67,15 @@ export default function CreateProduct() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F2EEE4]">
+    <div className="min-h-screen bg-paper">
       <Navbar />
 
       <div className="mx-auto max-w-xl px-6 py-12">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#14213D]/50">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
           New listing
         </p>
         <h1
-          className="mt-1 text-3xl text-[#14213D]"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="mt-1 text-3xl text-navy font-display"
         >
           Add a product
         </h1>
@@ -85,7 +84,7 @@ export default function CreateProduct() {
           <div>
             <label
               htmlFor="productName"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Product name
             </label>
@@ -95,14 +94,14 @@ export default function CreateProduct() {
               required
               value={form.productName}
               onChange={(e) => update("productName", e.target.value)}
-              className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+              className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
             />
           </div>
 
           <div>
             <label
               htmlFor="description"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Description
             </label>
@@ -111,7 +110,7 @@ export default function CreateProduct() {
               rows={3}
               value={form.description}
               onChange={(e) => update("description", e.target.value)}
-              className="mt-2 block w-full resize-none rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+              className="mt-2 block w-full resize-none rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
             />
           </div>
 
@@ -119,7 +118,7 @@ export default function CreateProduct() {
             <div>
               <label
                 htmlFor="price"
-                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+                className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
                 Price ($)
               </label>
@@ -131,14 +130,14 @@ export default function CreateProduct() {
                 required
                 value={form.price}
                 onChange={(e) => update("price", e.target.value)}
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
 
             <div>
               <label
                 htmlFor="stock"
-                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+                className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
                 Stock
               </label>
@@ -149,7 +148,7 @@ export default function CreateProduct() {
                 value={form.stock}
                 onChange={(e) => update("stock", e.target.value)}
                 placeholder="0"
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -158,7 +157,7 @@ export default function CreateProduct() {
             <div>
               <label
                 htmlFor="category"
-                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+                className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
                 Category
               </label>
@@ -167,7 +166,7 @@ export default function CreateProduct() {
                 required
                 value={form.category}
                 onChange={(e) => update("category", e.target.value)}
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -180,7 +179,7 @@ export default function CreateProduct() {
             <div>
               <label
                 htmlFor="status"
-                className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+                className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
                 Status
               </label>
@@ -188,7 +187,7 @@ export default function CreateProduct() {
                 id="status"
                 value={form.status}
                 onChange={(e) => update("status", e.target.value)}
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -202,7 +201,7 @@ export default function CreateProduct() {
           <div>
             <label
               htmlFor="image"
-              className="block font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Image URL
             </label>
@@ -212,18 +211,18 @@ export default function CreateProduct() {
               value={form.image}
               onChange={(e) => update("image", e.target.value)}
               placeholder="https://..."
-              className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-[#14213D] outline outline-1 -outline-offset-1 outline-[#14213D]/15 placeholder:text-[#14213D]/30 focus:outline-2 focus:-outline-offset-2 focus:outline-[#E8A33D]"
+              className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
             />
           </div>
 
-          <p className="min-h-[1rem] font-mono text-xs text-[#B33F2E]">
+          <p className="min-h-[1rem] font-mono text-xs text-rust">
             {error || ""}
           </p>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-[#14213D] py-3 font-mono text-xs uppercase tracking-widest text-[#FBF7F0] transition hover:bg-[#B33F2E] disabled:opacity-50"
+            className="w-full rounded-md bg-navy py-3 font-mono text-xs uppercase tracking-widest text-cream transition hover:bg-rust disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create product"}
           </button>

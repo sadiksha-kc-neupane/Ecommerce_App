@@ -4,6 +4,7 @@ import HeroSlider from "./HeroSlider.jsx"
 import CategoryFilter from "./CategoryFilter.jsx"
 import ProductGrid from "./ProductGrid.jsx"
 import TrustBadges from "./TrustBadges.jsx"
+import FeaturedRow from "./FeaturedRow.jsx"
 import Footer from "../components/Footer.jsx"
 import { fetchProducts, addToCart } from "../lib/api.js"
 import { useCart } from "../context/CartContext.jsx"
@@ -41,25 +42,50 @@ export default function Home() {
       : products.filter((p) => p.category === activeCategory)
 
   return (
-    <div className="min-h-screen bg-[#F2EEE4]">
+    <div className="min-h-screen bg-paper">
       <Navbar />
       <HeroSlider />
       <CategoryFilter activeCategory={activeCategory} onChange={setActiveCategory} />
 
-      <main className="py-6">
-        <ProductGrid
-          products={visibleProducts}
-          loading={loading}
-          error={error}
-          onAddToCart={handleAddToCart}
-        />
+      <main>
+        {/* featured strip uses the unfiltered fetched list; grid stays filterable */}
+        {!loading && !error && (
+          <FeaturedRow products={products} onAddToCart={handleAddToCart} />
+        )}
+
+        <section className="mt-16 pb-20">
+          <div className="mx-auto mb-6 flex max-w-6xl items-end justify-between gap-4 px-6">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
+                The full catalog
+              </p>
+              <h2
+                className="mt-2 text-2xl text-navy sm:text-3xl font-display"
+              >
+                {activeCategory === "all" ? "Everything in stock" : activeCategory}
+              </h2>
+            </div>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-navy/40">
+              {visibleProducts.length} {visibleProducts.length === 1 ? "item" : "items"}
+            </p>
+          </div>
+
+          <ProductGrid
+            products={visibleProducts}
+            loading={loading}
+            error={error}
+            onAddToCart={handleAddToCart}
+          />
+        </section>
       </main>
 
-      <TrustBadges />
+      <div className="pb-16">
+        <TrustBadges />
+      </div>
       <Footer />
 
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-sm bg-[#14213D] px-5 py-3 font-mono text-xs uppercase tracking-widest text-[#FBF7F0] shadow-lg">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-sm bg-navy px-5 py-3 font-mono text-xs uppercase tracking-widest text-cream shadow-lg">
           {toast}
         </div>
       )}

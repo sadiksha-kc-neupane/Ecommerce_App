@@ -29,28 +29,27 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F2EEE4]">
+    <div className="min-h-screen bg-paper">
       <Navbar />
 
       <main className="mx-auto max-w-2xl px-6 py-12">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#14213D]/50">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
           Checkout
         </p>
         <h1
-          className="mt-3 mb-8 text-3xl leading-tight text-[#14213D]"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="mt-3 mb-8 text-3xl leading-tight text-navy font-display"
         >
           Complete your order
         </h1>
 
         {!isLoggedIn && (
-          <div className="rounded-md bg-[#FBF7F0] p-10 text-center outline outline-1 -outline-offset-1 outline-[#14213D]/15">
-            <p className="font-mono text-sm text-[#14213D]">
+          <div className="rounded-md bg-cream p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
+            <p className="font-mono text-sm text-navy">
               You need an account to check out.
             </p>
             <Link
               to="/signin"
-              className="mt-4 inline-block rounded-sm bg-[#E8A33D] px-6 py-3 font-mono text-xs uppercase tracking-widest text-[#14213D] transition hover:bg-[#14213D] hover:text-[#FBF7F0]"
+              className="mt-4 inline-block rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
             >
               Sign in
             </Link>
@@ -58,29 +57,28 @@ export default function Checkout() {
         )}
 
         {isLoggedIn && placedOrder && (
-          <div className="rounded-md bg-[#FBF7F0] p-10 text-center outline outline-1 -outline-offset-1 outline-[#4F6F52]/40">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#4F6F52]">
+          <div className="rounded-md bg-cream p-10 text-center outline outline-1 -outline-offset-1 outline-moss/40">
+            <p className="font-mono text-xs uppercase tracking-widest text-moss">
               Order placed
             </p>
             <h2
-              className="mt-3 text-2xl text-[#14213D]"
-              style={{ fontFamily: "'Fraunces', serif" }}
+              className="mt-3 text-2xl text-navy font-display"
             >
               Thank you! Your order is confirmed.
             </h2>
-            <p className="mt-2 font-mono text-xs text-[#14213D]/60">
+            <p className="mt-2 font-mono text-xs text-navy/60">
               Order ID: {placedOrder.id}
             </p>
-            <p className="mt-1 font-mono text-sm font-semibold text-[#E8A33D]">
+            <p className="mt-1 font-mono text-sm font-semibold text-ochre">
               Total: ${Number(placedOrder.totalAmount).toFixed(2)}
             </p>
-            <p className="mt-4 text-sm text-[#14213D]/70">
+            <p className="mt-4 text-sm text-navy/70">
               Status: <span className="capitalize">{placedOrder.status}</span> ·{" "}
               Shipping to: {placedOrder.address}
             </p>
             <Link
               to="/product-list"
-              className="mt-6 inline-block rounded-sm bg-[#14213D] px-6 py-3 font-mono text-xs uppercase tracking-widest text-[#FBF7F0] transition hover:bg-[#E8A33D] hover:text-[#14213D]"
+              className="mt-6 inline-block rounded-sm bg-navy px-6 py-3 font-mono text-xs uppercase tracking-widest text-cream transition hover:bg-ochre hover:text-navy"
             >
               Continue shopping
             </Link>
@@ -90,10 +88,10 @@ export default function Checkout() {
         {isLoggedIn && !placedOrder && (
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-5 rounded-md bg-[#FBF7F0] p-8 outline outline-1 -outline-offset-1 outline-[#14213D]/15"
+            className="flex flex-col gap-5 rounded-md bg-cream p-8 outline outline-1 -outline-offset-1 outline-navy/15"
           >
             <label className="flex flex-col gap-2">
-              <span className="font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60">
+              <span className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
                 Shipping address
               </span>
               <textarea
@@ -103,12 +101,12 @@ export default function Checkout() {
                 required
                 rows={4}
                 placeholder="Street, city, postal code..."
-                className="rounded-sm border border-[#14213D]/20 bg-white px-4 py-3 text-sm text-[#14213D] focus:border-[#E8A33D] focus:outline-none"
+                className="rounded-sm border border-navy/20 bg-white px-4 py-3 text-sm text-navy focus:border-ochre focus:outline-none"
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="font-mono text-[11px] uppercase tracking-widest text-[#14213D]/60">
+              <span className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
                 Payment method
               </span>
               <input
@@ -117,12 +115,12 @@ export default function Checkout() {
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 placeholder="e.g. Cash on delivery, card, bank transfer..."
-                className="rounded-sm border border-[#14213D]/20 bg-white px-4 py-3 text-sm text-[#14213D] focus:border-[#E8A33D] focus:outline-none"
+                className="rounded-sm border border-navy/20 bg-white px-4 py-3 text-sm text-navy focus:border-ochre focus:outline-none"
               />
             </label>
 
             {error && (
-              <p className="rounded-sm bg-[#B33F2E]/10 px-4 py-3 font-mono text-xs text-[#B33F2E]">
+              <p className="rounded-sm bg-rust/10 px-4 py-3 font-mono text-xs text-rust">
                 {error}
               </p>
             )}
@@ -130,7 +128,7 @@ export default function Checkout() {
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-sm bg-[#E8A33D] px-6 py-3 font-mono text-xs uppercase tracking-widest text-[#14213D] transition hover:bg-[#14213D] hover:text-[#FBF7F0] disabled:cursor-not-allowed disabled:bg-[#14213D]/20 disabled:text-[#14213D]/40"
+              className="rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream disabled:cursor-not-allowed disabled:bg-navy/20 disabled:text-navy/40"
             >
               {submitting ? "Placing order..." : "Place order"}
             </button>

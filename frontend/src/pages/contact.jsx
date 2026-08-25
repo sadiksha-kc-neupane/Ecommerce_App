@@ -17,7 +17,7 @@ function Contact() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FBF7F0]">
+    <div className="flex min-h-screen flex-col bg-cream">
       <Navbar />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12">
@@ -25,8 +25,7 @@ function Contact() {
           Contact
         </p>
         <h1
-          className="mb-8 text-4xl font-semibold text-[#14213D]"
-          style={{ fontFamily: "'Fraunces', serif" }}
+          className="mb-8 text-4xl font-semibold text-navy font-display"
         >
           Talk to Bazario
         </h1>
@@ -45,7 +44,7 @@ function Contact() {
                 setForm({ name: "", email: "", message: "" });
                 setSent(false);
               }}
-              className="mt-4 rounded-md bg-[#14213D] px-4 py-2 text-sm text-white transition hover:bg-[#14213D]/80"
+              className="mt-4 rounded-md bg-navy px-4 py-2 text-sm text-white transition hover:bg-navy/80"
             >
               Send another message
             </button>
@@ -53,7 +52,7 @@ function Contact() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 rounded-lg border border-[#14213D]/15 bg-white p-6"
+            className="flex flex-col gap-4 rounded-lg border border-navy/15 bg-white p-6"
           >
             <label className="flex flex-col gap-1">
               <span className="font-mono text-xs uppercase tracking-widest text-slate-600">
@@ -66,7 +65,7 @@ function Contact() {
                 onChange={handleChange}
                 required
                 placeholder="Your name"
-                className="rounded-md border border-slate-300 px-3 py-2 focus:border-[#14213D] focus:outline-none"
+                className="rounded-md border border-slate-300 px-3 py-2 focus:border-navy focus:outline-none"
               />
             </label>
 
@@ -81,7 +80,7 @@ function Contact() {
                 onChange={handleChange}
                 required
                 placeholder="you@example.com"
-                className="rounded-md border border-slate-300 px-3 py-2 focus:border-[#14213D] focus:outline-none"
+                className="rounded-md border border-slate-300 px-3 py-2 focus:border-navy focus:outline-none"
               />
             </label>
 
@@ -96,13 +95,13 @@ function Contact() {
                 required
                 rows={5}
                 placeholder="What can we help you with?"
-                className="rounded-md border border-slate-300 px-3 py-2 focus:border-[#14213D] focus:outline-none"
+                className="rounded-md border border-slate-300 px-3 py-2 focus:border-navy focus:outline-none"
               />
             </label>
 
             <button
               type="submit"
-              className="mt-2 rounded-md bg-[#14213D] px-6 py-3 text-white transition hover:bg-[#14213D]/80"
+              className="mt-2 rounded-md bg-navy px-6 py-3 text-white transition hover:bg-navy/80"
             >
               Send Message
             </button>
