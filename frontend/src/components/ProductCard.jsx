@@ -1,11 +1,17 @@
+import { motion, useReducedMotion } from "framer-motion"
 import { CATEGORY_COLORS } from "../lib/categories.js"
 
 export default function ProductCard({ product, onAddToCart }) {
+  const reduceMotion = useReducedMotion()
   const outOfStock = Number(product.stock) <= 0 || product.status === "out_of_stock"
   const dotColor = CATEGORY_COLORS[product.category] || "#14213D"
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_-16px_rgba(20,33,61,0.35)] hover:outline-ochre">
+    <motion.div
+      whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      className="group flex flex-col overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition-[box-shadow,outline-color] duration-300 hover:shadow-[0_16px_36px_-16px_rgba(20,33,61,0.35)] hover:outline-ochre will-change-transform"
+    >
       <a href={`/product/${product.id}`} className="block overflow-hidden bg-paper">
         {product.productImage ? (
           <img
@@ -66,6 +72,6 @@ export default function ProductCard({ product, onAddToCart }) {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

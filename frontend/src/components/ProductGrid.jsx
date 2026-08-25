@@ -1,6 +1,9 @@
+import { motion } from "framer-motion"
 import ProductCard from "./ProductCard.jsx"
+import { useStaggerVariants } from "../lib/motion.js"
 
 export default function ProductGrid({ products, loading, error, onAddToCart }) {
+  const stagger = useStaggerVariants({ count: products?.length })
   if (loading) {
     return (
       <div className="grid grid-cols-2 gap-4 px-6 sm:grid-cols-3 lg:grid-cols-4">
@@ -43,16 +46,17 @@ export default function ProductGrid({ products, loading, error, onAddToCart }) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 px-6 sm:grid-cols-3 lg:grid-cols-4">
-      {products.map((product, i) => (
-        <div
-          key={product.id}
-          className="animate-fade-up"
-          style={{ animationDelay: `${Math.min(i, 11) * 60}ms` }}
-        >
+    <motion.div
+      variants={stagger.container}
+      initial="hidden"
+      animate="show"
+      className="grid grid-cols-2 gap-4 px-6 sm:grid-cols-3 lg:grid-cols-4"
+    >
+      {products.map((product) => (
+        <motion.div key={product.id} variants={stagger.item}>
           <ProductCard product={product} onAddToCart={onAddToCart} />
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   )
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { toast } from "sonner"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import { CATEGORY_COLORS } from "../lib/categories.js"
@@ -8,12 +9,12 @@ import { useCart } from "../context/CartContext.jsx"
 
 export default function Product() {
   const { refreshCart } = useCart()
+  const navigate = useNavigate()
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [quantity, setQuantity] = useState(1)
-  const [toast, setToast] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -40,19 +41,20 @@ export default function Product() {
     }
   }, [id])
 
-  function showToast(message, ms = 2500) {
-    setToast(message)
-    setTimeout(() => setToast(null), ms)
+  function showToast(message) {
+    toast.error(message)
   }
 
   async function handleAddToCart() {
     try {
       await addToCart(product.id, quantity)
       refreshCart()
-      showToast("Added to cart")
+      toast.success("Added to cart")
     } catch (err) {
       if (err.message.toLowerCase().includes("token") || err.message.includes("401")) {
-        showToast("Please sign in to add items to your cart")
+        toast.error("Please sign in to add items to your cart", {
+          action: { label: "Sign in", onClick: () => navigate("/signin") },
+        })
       } else {
         showToast(err.message)
       }
@@ -182,17 +184,6 @@ export default function Product() {
       </main>
 
       <Footer />
-
-      {toast && (
-        <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-sm bg-navy px-5 py-3 font-mono text-xs uppercase tracking-widest text-cream shadow-lg">
-          {toast}
-          {toast.toLowerCase().includes("sign in") && (
-            <Link to="/signin" className="text-ochre underline">
-              Sign in
-            </Link>
-          )}
-        </div>
-      )}
     </div>
   )
 }

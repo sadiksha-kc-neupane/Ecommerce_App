@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react'
 import { fetchProducts, deleteProduct as deleteProductApi } from "../lib/api.js"
-// import { Link } from 'react-router-dom';
+import { toast } from "sonner"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog.jsx"
 
 function UserDashboardProducts  () {
     const [dashboardproducts,setDashboardProducts] = useState([]);
@@ -23,10 +34,10 @@ function UserDashboardProducts  () {
 async function deleteProduct(id) {
     try {
         await deleteProductApi(id);
-        alert("Deleted successfully");
+        toast.success("Deleted successfully");
         fetchDashboardProducts(); // Refresh list after deleting
     } catch (error) {
-      alert(error.message || "Something went wrong. Try again.");
+      toast.error(error.message || "Something went wrong. Try again.");
     }
 }
 
@@ -83,12 +94,31 @@ useEffect(() => {
                 {products.Qty}
               </p>
              
-              <button
-                onClick={() => deleteProduct(products.id)}
-                className="mt-4 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-medium transition"
-              >
-                Delete Product
-              </button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    className="mt-4 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-medium transition"
+                  >
+                    Delete Product
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this product?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently remove{" "}
+                      {products.name || "this product"} from the catalog. This
+                      action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => deleteProduct(products.id)}>
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         ))}

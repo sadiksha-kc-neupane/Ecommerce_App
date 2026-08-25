@@ -8,6 +8,7 @@ import FeaturedRow from "./FeaturedRow.jsx"
 import Footer from "../components/Footer.jsx"
 import { fetchProducts, addToCart } from "../lib/api.js"
 import { useCart } from "../context/CartContext.jsx"
+import { toast } from "sonner"
 
 export default function Home() {
   const { refreshCart } = useCart()
@@ -15,7 +16,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [activeCategory, setActiveCategory] = useState("all")
-  const [toast, setToast] = useState(null)
 
   useEffect(() => {
     fetchProducts()
@@ -28,11 +28,9 @@ export default function Home() {
     try {
       await addToCart(productId, 1)
       refreshCart()
-      setToast("Added to cart")
-      setTimeout(() => setToast(null), 2000)
+      toast.success("Added to cart")
     } catch (err) {
-      setToast(err.message.includes("token") ? "Sign in to add items" : err.message)
-      setTimeout(() => setToast(null), 2500)
+      toast.error(err.message.includes("token") ? "Sign in to add items" : err.message)
     }
   }
 
@@ -83,12 +81,6 @@ export default function Home() {
         <TrustBadges />
       </div>
       <Footer />
-
-      {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-sm bg-navy px-5 py-3 font-mono text-xs uppercase tracking-widest text-cream shadow-lg">
-          {toast}
-        </div>
-      )}
     </div>
   )
 }

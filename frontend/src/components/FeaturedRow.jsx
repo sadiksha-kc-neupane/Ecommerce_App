@@ -1,16 +1,20 @@
 import { Link } from "react-router-dom"
+import { motion } from "framer-motion"
 import { CATEGORY_COLORS } from "../lib/categories.js"
+import { useStaggerVariants } from "../lib/motion.js"
 
 // "Featured" = first products returned by the existing fetch (most recent
 // first per the backend's ordering). No featured flag exists on the model,
 // so this is the agreed substitute.
 export default function FeaturedRow({ products, onAddToCart }) {
+  const stagger = useStaggerVariants({ stagger: 0.08, count: Math.min(products?.length || 0, 8) })
+
   if (!products?.length) return null
 
   const featured = products.slice(0, 8)
 
   return (
-    <section className="animate-fade-up mt-16">
+    <section className="mt-16">
       <div className="mx-auto flex max-w-6xl items-end justify-between gap-4 px-6">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ochre-ink">
@@ -30,15 +34,21 @@ export default function FeaturedRow({ products, onAddToCart }) {
         </Link>
       </div>
 
-      <div className="scroll-slim mt-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-3">
+      <motion.div
+        variants={stagger.container}
+        initial="hidden"
+        animate="show"
+        className="scroll-slim mt-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-3"
+      >
         {featured.map((product) => {
           const outOfStock =
             Number(product.stock) <= 0 || product.status === "out_of_stock"
           const dotColor = CATEGORY_COLORS[product.category] || "#14213D"
 
           return (
-            <article
+            <motion.article
               key={product.id}
+              variants={stagger.item}
               className="group w-64 flex-shrink-0 snap-start overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(20,33,61,0.35)] hover:outline-ochre sm:w-72"
             >
               <Link to={`/product/${product.id}`} className="block">
@@ -104,10 +114,10 @@ export default function FeaturedRow({ products, onAddToCart }) {
                   )}
                 </div>
               </div>
-            </article>
+            </motion.article>
           )
         })}
-      </div>
+      </motion.div>
     </section>
   )
 }

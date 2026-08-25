@@ -5,6 +5,13 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar.jsx"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select.jsx"
 import { createProduct } from "../lib/api.js"
 
 const CATEGORIES = ["electronics", "materials", "agriculture", "cosmetics"]
@@ -156,45 +163,53 @@ export default function CreateProduct() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label
-                htmlFor="category"
+                id="category-label"
                 className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
                 Category
               </label>
-              <select
-                id="category"
+              <Select
                 required
                 value={form.category}
-                onChange={(e) => update("category", e.target.value)}
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                onValueChange={(value) => update("category", value)}
+                name="category"
               >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger aria-labelledby="category-label" className="mt-2">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label
-                htmlFor="status"
+                id="status-label"
                 className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
                 Status
               </label>
-              <select
-                id="status"
+              <Select
                 value={form.status}
-                onChange={(e) => update("status", e.target.value)}
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                onValueChange={(value) => update("status", value)}
+                name="status"
               >
-                {STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {s.replace("_", " ")}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger aria-labelledby="status-label" className="mt-2">
+                  <SelectValue placeholder="Select a status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUSES.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s.replace("_", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

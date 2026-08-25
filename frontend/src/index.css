@@ -1,6 +1,82 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+/* shadcn/ui design tokens, mapped onto the existing navy/cream/ochre palette */
+:root {
+  --background: #fbf7f0;
+  --foreground: #14213d;
+  --card: #fbf7f0;
+  --card-foreground: #14213d;
+  --popover: #fbf7f0;
+  --popover-foreground: #14213d;
+  --primary: #e8a33d;
+  --primary-foreground: #14213d;
+  --secondary: #f2eee4;
+  --secondary-foreground: #14213d;
+  --muted: #f2eee4;
+  --muted-foreground: color-mix(in srgb, #14213d 60%, transparent);
+  --accent: #f2eee4;
+  --accent-foreground: #14213d;
+  --destructive: #b33f2e;
+  --destructive-foreground: #fbf7f0;
+  --border: color-mix(in srgb, #14213d 15%, transparent);
+  --input: color-mix(in srgb, #14213d 15%, transparent);
+  --ring: #e8a33d;
+  --radius: 0.375rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* Radix overlay/dialog enter + exit animations (no tailwindcss-animate dep) */
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes content-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes select-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+[data-slot="alert-dialog-overlay"][data-state="open"] {
+  animation: overlay-in 150ms ease-out both;
+}
+[data-slot="alert-dialog-content"][data-state="open"] {
+  animation: content-in 150ms ease-out both;
+}
+[data-slot="select-content"][data-state="open"] {
+  animation: select-in 120ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="alert-dialog-overlay"][data-state="open"],
+  [data-slot="alert-dialog-content"][data-state="open"],
+  [data-slot="select-content"][data-state="open"] {
+    animation: none;
+  }
+}
+
 /* Entrance animation used for staggered section/card reveals (pure CSS, no lib) */
 @keyframes fade-up {
   from {

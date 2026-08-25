@@ -35,29 +35,32 @@ import Productlist from "./pages/product-list";
 import UserDashboard from "./pages/user-dashboard";
 import Checkout from "./pages/checkout";
 import Cart from "./pages/cart";
+import PageTransition from "./components/PageTransition.jsx";
+import { Toaster } from "./components/ui/sonner.jsx";
 
 function App() {
   return (
     <CartProvider>
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/forgotPassword" element={<Forgot />}/>
-        <Route path="/otp" element={<Otp />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/create-Product" element={<CreateProduct/>}/>
-        <Route path="/product-list" element={<Productlist/>}/>
-        <Route path="/fetch-products" element={<Productlist/>}/>
-        <Route path="/user-dashboard" element={<UserDashboard/>}/>
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
+        <Route path="/signin" element={<PageTransition><Signin /></PageTransition>} />
+        <Route path="/forgotPassword" element={<PageTransition><Forgot /></PageTransition>}/>
+        <Route path="/otp" element={<PageTransition><Otp /></PageTransition>} />
+        <Route path="/product" element={<PageTransition><Product /></PageTransition>} />
+        <Route path="/product/:id" element={<PageTransition><Product /></PageTransition>} />
+        <Route path="/create-Product" element={<PageTransition><CreateProduct/></PageTransition>}/>
+        <Route path="/product-list" element={<PageTransition><Productlist/></PageTransition>}/>
+        <Route path="/fetch-products" element={<PageTransition><Productlist/></PageTransition>}/>
+        <Route path="/user-dashboard" element={<PageTransition><UserDashboard /></PageTransition>}/>
+        <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
+        <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
         <Route path="/:error" element={<h2>Error not found</h2>} />
       </Routes>
+      <Toaster duration={2500} />
       </BrowserRouter>
     </CartProvider>
   );
