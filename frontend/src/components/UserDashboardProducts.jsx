@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchProducts, deleteProduct as deleteProductApi } from "../lib/api.js"
+import { getCurrentUser } from "../lib/auth.js"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -22,8 +23,11 @@ function UserDashboardProducts  () {
     async function fetchDashboardProducts() {
      try {
        const data = await fetchProducts();
-       const products = data.data || [];
-       setDashboardProducts(products.slice(-4).reverse());
+       const all = data.data || [];
+       // only show the logged-in seller's own listings, not the whole catalog
+       const currentUser = getCurrentUser()
+       const mine = all.filter((p) => p.userId === currentUser?.id)
+       setDashboardProducts(mine.slice(-4).reverse());
      } catch (error) {
        console.error(error);
      }
