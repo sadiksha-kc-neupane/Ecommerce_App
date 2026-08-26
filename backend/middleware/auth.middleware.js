@@ -19,3 +19,11 @@ export const verifyToken = (req, res, next) => {
         return res.status(401).json({ message: "Invalid or expired token" })
     }
 }
+
+// must run AFTER verifyToken so req.user is populated
+export const requireRole = (...allowedRoles) => (req, res, next) => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+        return res.status(403).json({ message: "Not authorized for this action" })
+    }
+    next()
+}

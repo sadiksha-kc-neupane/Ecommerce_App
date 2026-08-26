@@ -48,23 +48,34 @@ export const fetchSingleProduct = async (req, res) => {
 // (BUG FIX: original called blog.update() here instead of product.update())
 export const editProduct = async (req, res) => {
   const id = req.params.id
+  const userId = req.user.id
   const { productName, price, stock, description } = req.body
 
-  await Product.update(
+  const [updatedRows] = await Product.update(
     {
       productName,
       price,
       stock,
       description,
     },
-    { where: { id } }
+    { where: { id, userId } }
   )
-  res.send("updated sucessfully")
+
+  if (updatedRows === 0) {
+    return res.status(404).json({ message: "Product not found or not owned by you" })
+  }
+  res.json({ message: "updated sucessfully" })
 }
 
 // DELETE /delete-product/:id
 export const deleteProduct = async (req, res) => {
   const Productid = req.params.id
-  await Product.destroy({ where: { id: Productid } })
+  const userId = req.user.id
+
+  const deletedRows = await Product.destroy({ where: { id: Productid, userId } })
+
+  if (deletedRows === 0) {
+    return res.status(404).json({ message: "Product not found or not owned by you" })
+  }
   res.status(200).json({ message: "deleted sucessfully" })
 }

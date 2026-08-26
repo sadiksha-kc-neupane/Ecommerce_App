@@ -2,6 +2,9 @@ import { User } from "../model/index.js"
 
 // GET /fetch-users
 export const fetchUser = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Not authorized" })
+  }
   const datas = await User.findAll({
     attributes: { exclude: ["password"] },
   })

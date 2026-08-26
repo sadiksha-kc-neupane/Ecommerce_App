@@ -5,19 +5,22 @@ import envConfig from "../config/env.js"
 
 // POST /register
 export const registerUser = async (req, res) => {
-  console.log(req.body)
-
-  const { username, password, email } = req.body
+  const { username, password, email, role } = req.body
 
   if (!username || !password || !email) {
     return res.status(400).json({ message: "username, email, and password are required" })
   }
+
+  // only customer/seller can self-register; admin is never assignable here
+  const allowedRoles = ["customer", "seller"]
+  const finalRole = allowedRoles.includes(role) ? role : "customer"
 
   try {
     const newUser = await User.create({
       username,
       password: bcrypt.hashSync(password, 10),
       email,
+      role: finalRole,
     })
 
     // don't send the hashed password back

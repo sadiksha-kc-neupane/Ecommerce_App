@@ -136,3 +136,56 @@ export const fetchSingleOrder = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" })
   }
 }
+
+// GET /seller/orders  (orders containing products owned by the logged-in seller)
+//
+// Response shape — a flat list of order-items, each enriched with its parent
+// order and the product. One item per product-per-order; the same orderId can
+// appear multiple times if a buyer ordered several of this seller's products
+// in one checkout:
+//
+// {
+//   "orderItems": [
+//     {
+//       "id": "<orderItemId>",
+//       "orderId": "<orderId>",
+//       "productId": "<productId>",
+//       "quantity": 2,
+//       "price": "19.99",            // snapshot price at time of order
+//       "createdAt": "...",
+//       "updatedAt": "...",
+//       "Product": {                 // the seller's product
+//         "id": "...", "productName": "...", "price": "...",
+//         "stock": 5, "userId": "<sellerId>", ...
+//       },
+//       "Order": {                   // the buyer's order
+//         "id": "...", "userId": "<buyerId>",
+//         "totalAmount": "...",      // whole-cart total, not seller-only subtotal
+//         "status": "pending" | "shipped" | ...,
+//         "paymentStatus": "unpaid" | ...,
+//         "paymentMethod": "...",
+//         "address": "...",
+//         "createdAt": "...", "updatedAt": "..."
+//       }
+//     },
+//     ...
+//   ]
+// }
+export const fetchSellerOrders = async (req, res) => {
+  try {
+    const sellerId = req.user.id
+
+    const orderItems = await OrderItem.findAll({
+      include: [
+        { model: Product, where: { userId: sellerId } },
+        { model: Order },
+      ],
+      order: [["createdAt", "DESC"]],
+    })
+
+    return res.status(200).json({ orderItems })
+  } catch (error) {
+    console.error("fetchSellerOrders error:", error.message)
+    return res.status(500).json({ message: "Something went wrong" })
+  }
+}
