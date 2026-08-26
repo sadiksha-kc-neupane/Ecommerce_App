@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "../components/ui/select.jsx"
 import { createProduct } from "../lib/api.js"
+import { getCurrentUser } from "../lib/auth.js"
 
 const CATEGORIES = ["electronics", "materials", "agriculture", "cosmetics"]
 const STATUSES = ["in_stock", "out_of_stock", "discontinued"]
@@ -65,7 +66,9 @@ export default function CreateProduct() {
         status: form.status,
         image: form.image, // backend maps this to productImage
       })
-      navigate("/user-dashboard")
+      // only sellers reach this page (RoleRoute), but decide the dashboard
+      // destination from the token's role rather than hardcoding one
+      navigate(getCurrentUser()?.role === "seller" ? "/seller-dashboard" : "/customer-dashboard")
     } catch (err) {
       setError(err.message)
     } finally {

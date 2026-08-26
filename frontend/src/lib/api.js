@@ -52,5 +52,8 @@ export const fetchSingleOrder = (id) => request(`/orders/${id}`, { auth: true })
 export const buyProduct = (payload) => request("/product/buy", { method: "POST", body: payload, auth: true })
 export const cancelOrder = (id) => request(`/product/cancel/${id}`, { method: "POST", auth: true })
 
+// ---- seller ----
+export const fetchSellerOrders = () => request("/seller/orders", { auth: true })
+
 // ---- users ----
 export const fetchUsers = () => request("/fetch-users", { auth: true })

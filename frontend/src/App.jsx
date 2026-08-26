@@ -32,7 +32,8 @@ import Otp from "./pages/otp";
 import Product from "./pages/Product";
 import CreateProduct from "./pages/create-Product";
 import Productlist from "./pages/product-list";
-import UserDashboard from "./pages/user-dashboard";
+import SellerDashboard from "./pages/seller-dashboard";
+import CustomerDashboard from "./pages/customer-dashboard";
 import Checkout from "./pages/checkout";
 import Cart from "./pages/cart";
 import PageTransition from "./components/PageTransition.jsx";
@@ -56,7 +57,8 @@ function App() {
         <Route path="/create-Product" element={<PageTransition><RoleRoute allowedRoles={["seller"]}><CreateProduct /></RoleRoute></PageTransition>}/>
         <Route path="/product-list" element={<PageTransition><Productlist/></PageTransition>}/>
         <Route path="/fetch-products" element={<PageTransition><Productlist/></PageTransition>}/>
-        <Route path="/user-dashboard" element={<PageTransition><UserDashboard /></PageTransition>}/>
+        <Route path="/seller-dashboard" element={<PageTransition><RoleRoute allowedRoles={["seller"]}><SellerDashboard /></RoleRoute></PageTransition>} />
+        <Route path="/customer-dashboard" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><CustomerDashboard /></RoleRoute></PageTransition>} />
         <Route path="/checkout" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Checkout /></RoleRoute></PageTransition>} />
         <Route path="/cart" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Cart /></RoleRoute></PageTransition>} />
         <Route path="/:error" element={<h2>Error not found</h2>} />
