@@ -36,6 +36,7 @@ import UserDashboard from "./pages/user-dashboard";
 import Checkout from "./pages/checkout";
 import Cart from "./pages/cart";
 import PageTransition from "./components/PageTransition.jsx";
+import RoleRoute from "./components/RoleRoute.jsx";
 import { Toaster } from "./components/ui/sonner.jsx";
 
 function App() {
@@ -52,12 +53,12 @@ function App() {
         <Route path="/otp" element={<PageTransition><Otp /></PageTransition>} />
         <Route path="/product" element={<PageTransition><Product /></PageTransition>} />
         <Route path="/product/:id" element={<PageTransition><Product /></PageTransition>} />
-        <Route path="/create-Product" element={<PageTransition><CreateProduct/></PageTransition>}/>
+        <Route path="/create-Product" element={<PageTransition><RoleRoute allowedRoles={["seller"]}><CreateProduct /></RoleRoute></PageTransition>}/>
         <Route path="/product-list" element={<PageTransition><Productlist/></PageTransition>}/>
         <Route path="/fetch-products" element={<PageTransition><Productlist/></PageTransition>}/>
         <Route path="/user-dashboard" element={<PageTransition><UserDashboard /></PageTransition>}/>
-        <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
-        <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
+        <Route path="/checkout" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Checkout /></RoleRoute></PageTransition>} />
+        <Route path="/cart" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Cart /></RoleRoute></PageTransition>} />
         <Route path="/:error" element={<h2>Error not found</h2>} />
       </Routes>
       <Toaster duration={2500} />

@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useCart } from "../context/CartContext.jsx"
+import { getCurrentUser } from "../lib/auth.js"
 
 export default function Navbar() {
   const navigate = useNavigate()
-  const token = localStorage.getItem("token")
+  const user = getCurrentUser() // null when logged out; { id, role } when logged in
   const { cartCount, clearCart } = useCart()
   const [search, setSearch] = useState("")
 
@@ -54,24 +55,43 @@ export default function Navbar() {
           />
         </form>
 
-        <Link to="/cart" aria-label="Cart" className="relative">
-          <span className="font-mono text-xs uppercase tracking-widest text-cream/85 transition hover:text-cream">
-            Cart
-          </span>
-          {cartCount > 0 && (
-            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-ochre font-mono text-[9px] font-semibold text-navy">
-              {cartCount}
+        {user && user.role !== "seller" && (
+          <Link to="/cart" aria-label="Cart" className="relative">
+            <span className="font-mono text-xs uppercase tracking-widest text-cream/85 transition hover:text-cream">
+              Cart
             </span>
-          )}
-        </Link>
+            {cartCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-ochre font-mono text-[9px] font-semibold text-navy">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        )}
 
-        {token ? (
-          <button
-            onClick={handleLogout}
-            className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
+        {user && user.role === "seller" && (
+          <Link
+            to="/create-Product"
+            className="font-mono text-xs uppercase tracking-widest text-cream/85 transition hover:text-cream"
           >
-            Log out
-          </button>
+            Sell
+          </Link>
+        )}
+
+        {user ? (
+          <>
+            <Link
+              to={user.role === "seller" ? "/seller-dashboard" : "/customer-dashboard"}
+              className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
+            >
+              Dashboard
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
+            >
+              Log out
+            </button>
+          </>
         ) : (
           <>
             <Link
