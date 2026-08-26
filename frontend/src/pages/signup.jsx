@@ -97,7 +97,7 @@ import { registerUser } from "../lib/api.js"
 
 export default function Signup() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ username: "", email: "", password: "" })
+  const [form, setForm] = useState({ username: "", email: "", password: "", role: "customer" })
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -223,6 +223,34 @@ export default function Signup() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
+            </div>
+          </div>
+
+          <div>
+            <span className="block font-mono text-[11px] uppercase tracking-widest text-cream/60">
+              I want to
+            </span>
+            <div className="mt-2 grid grid-cols-2 gap-3">
+              {[
+                { value: "customer", label: "Customer", hint: "Buy products" },
+                { value: "seller", label: "Seller", hint: "List & sell products" },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setForm({ ...form, role: opt.value })}
+                  className={
+                    form.role === opt.value
+                      ? "rounded-md bg-ochre/15 px-3 py-3 text-center text-sm text-cream outline outline-2 -outline-offset-2 outline-ochre transition"
+                      : "rounded-md bg-cream/5 px-3 py-3 text-center text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 transition hover:outline-cream/40"
+                  }
+                >
+                  {opt.label}
+                  <span className="mt-1 block font-mono text-[10px] opacity-60">
+                    {opt.hint}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
 
