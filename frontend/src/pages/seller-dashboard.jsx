@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { Link, Navigate, useNavigate } from "react-router-dom"
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import AccountDetailsSection from "../components/AccountDetailsSection.jsx"
@@ -224,6 +225,8 @@ function Overview({ products, sales, loading, error, onViewSales }) {
             <StatCard label="Revenue" value={`$${stats.revenue.toFixed(2)}`} />
           </div>
 
+          <PerformanceSection sales={sales} />
+
           <div className="mt-8">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
@@ -250,6 +253,134 @@ function StatCard({ label, value }) {
     <div className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
       <p className="font-mono text-[10px] uppercase tracking-widest text-navy/50">{label}</p>
       <p className="mt-2 font-mono text-2xl font-semibold text-navy">{value}</p>
+    </div>
+  )
+}
+
+/* ============================== Performance (Overview) ============================== */
+
+function localDateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+}
+
+// Bucket the seller's sales by calendar day and build a contiguous 30-day
+// series (today back 29 days), with zero-revenue days shown as 0 instead of
+// being skipped. Each sale's amount is price (unit snapshot) * quantity.
+function buildDaySeries(sales, days = 30) {
+  const amounts = new Map()
+  for (const sale of sales) {
+    const d = new Date(sale.createdAt)
+    if (Number.isNaN(d.getTime())) continue
+    const key = localDateKey(d)
+    amounts.set(key, (amounts.get(key) || 0) + Number(sale.price || 0) * Number(sale.quantity || 0))
+  }
+
+  const today = new Date()
+  const series = []
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today)
+    d.setDate(today.getDate() - i)
+    const key = localDateKey(d)
+    series.push({
+      key,
+      label: `${d.getMonth() + 1}/${d.getDate()}`,
+      revenue: Math.round((amounts.get(key) || 0) * 100) / 100,
+    })
+  }
+  return series
+}
+
+function EmptyPerformance() {
+  return (
+    <div className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
+          Performance
+        </h2>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">
+          Last 30 days
+        </span>
+      </div>
+      <p className="py-10 text-center font-mono text-sm text-navy/50">
+        No sales in the last 30 days yet
+      </p>
+    </div>
+  )
+}
+
+function PerformanceSection({ sales }) {
+  const series = useMemo(() => buildDaySeries(sales), [sales])
+  const last30Revenue = useMemo(
+    () => series.reduce((sum, point) => sum + point.revenue, 0),
+    [series]
+  )
+
+  if (last30Revenue <= 0) {
+    return <EmptyPerformance />
+  }
+
+  return (
+    <div className="mt-8 rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
+          Performance
+        </h2>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">
+          Last 30 days
+        </span>
+      </div>
+
+      <div className="h-56 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+            <defs>
+              <linearGradient id="sellerRevenue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#E8A33D" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#E8A33D" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#14213D1A" vertical={false} />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 10, fill: "#9A6210", fontFamily: "IBM Plex Mono, monospace" }}
+              tickLine={false}
+              axisLine={{ stroke: "#14213D33" }}
+              interval="preserveStartEnd"
+              minTickGap={24}
+            />
+            <YAxis
+              tick={{ fontSize: 10, fill: "#9A6210", fontFamily: "IBM Plex Mono, monospace" }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v) => `$${v}`}
+              width={56}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#FBF7F0",
+                border: "1px solid #14213D26",
+                borderRadius: 6,
+                fontFamily: "IBM Plex Mono, monospace",
+                fontSize: 12,
+                color: "#14213D",
+              }}
+              labelStyle={{ color: "#9A6210", textTransform: "uppercase", fontSize: 10 }}
+              formatter={(value) => [`$${Number(value).toFixed(2)}`, "Revenue"]}
+              labelFormatter={(label, payload) => (payload?.[0]?.payload?.key ? `  ·  ${payload[0].payload.key}` : label)}
+            />
+            <Area
+              type="monotone"
+              dataKey="revenue"
+              stroke="#E8A33D"
+              strokeWidth={2}
+              fill="url(#sellerRevenue)"
+              dot={false}
+              activeDot={{ r: 4, fill: "#E8A33D", stroke: "#FBF7F0", strokeWidth: 2 }}
+              isAnimationActive
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   )
 }
