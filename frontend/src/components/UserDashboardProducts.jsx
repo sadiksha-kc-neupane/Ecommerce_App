@@ -46,26 +46,6 @@ async function deleteProduct(id) {
 }
 
 useEffect(() => {
-    // let isActive = true;
-
-    // const loadProducts = async () => {
-    //     try {
-    //         const response = await axios.get("http://localhost:3000/fetch-product");
-    //         if (!isActive) return;
-
-    //         const products = response.data.data || [];
-    //         setDashboardProducts(products.slice(-4).reverse());
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-    // loadProducts();
-
-    // return () => {
-    //     isActive = false;
-    // };
-
     fetchDashboardProducts()
 },[])
 
@@ -81,11 +61,26 @@ useEffect(() => {
             key={products.id}
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300"
           >
-            <img src={products.image} />
+            {products.productImage ? (
+              <img
+                src={products.productImage}
+                alt={products.productName}
+                className="h-48 w-full rounded-lg object-cover"
+              />
+            ) : (
+              <div className="flex h-48 w-full flex-col items-center justify-center gap-1 rounded-lg bg-[repeating-linear-gradient(45deg,#F2EEE4_0px,#F2EEE4_12px,#EDE7DA_12px,#EDE7DA_24px)]">
+                <span className="text-4xl text-navy/25 font-display">
+                  {products.productName?.charAt(0).toUpperCase()}
+                </span>
+                <span className="font-mono text-[8px] uppercase tracking-widest text-navy/35">
+                  No photo yet
+                </span>
+              </div>
+            )}
 
             <div className="flex flex-col gap-3">
               <h2 className="text-2xl font-semibold text-gray-800">
-                {products.name}
+                {products.productName}
               </h2>
 
               <p className="text-lg text-green-600 font-bold">
@@ -95,9 +90,9 @@ useEffect(() => {
                 {products.description}
               </p>
                  <p className="text-lg text-green-600 font-bold">
-                {products.Qty}
+                Stock: {products.stock}
               </p>
-             
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button
@@ -111,7 +106,7 @@ useEffect(() => {
                     <AlertDialogTitle>Delete this product?</AlertDialogTitle>
                     <AlertDialogDescription>
                       This will permanently remove{" "}
-                      {products.name || "this product"} from the catalog. This
+                      {products.productName || "this product"} from the catalog. This
                       action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -140,6 +135,3 @@ useEffect(() => {
 
 
 export default UserDashboardProducts 
-
-
-
