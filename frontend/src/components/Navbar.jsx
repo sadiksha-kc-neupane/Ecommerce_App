@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { ChevronDownIcon, UserCircleIcon } from "@heroicons/react/24/outline"
 import { useCart } from "../context/CartContext.jsx"
 import { getCurrentUser } from "../lib/auth.js"
 
@@ -8,6 +9,17 @@ export default function Navbar() {
   const user = getCurrentUser() // null when logged out; { id, role } when logged in
   const { cartCount, clearCart } = useCart()
   const [search, setSearch] = useState("")
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef(null)
+
+  useEffect(() => {
+    function closeProfile(event) {
+      if (!profileRef.current?.contains(event.target)) setProfileOpen(false)
+    }
+
+    document.addEventListener("mousedown", closeProfile)
+    return () => document.removeEventListener("mousedown", closeProfile)
+  }, [])
 
   function handleLogout() {
     localStorage.removeItem("token")
@@ -32,7 +44,7 @@ export default function Navbar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-full border border-ochre font-mono text-[9px] text-ochre">
             Logo
           </span>
-          <span className="text-lg">Bazario</span>
+          <span className="text-lg">Dipti&Suppliers</span>
         </Link>
 
         <nav className="hidden gap-5 font-mono text-[11px] uppercase tracking-widest text-cream/85 md:flex">
@@ -78,20 +90,42 @@ export default function Navbar() {
         )}
 
         {user ? (
-          <>
-            <Link
-              to={user.role === "seller" ? "/seller-dashboard" : "/customer-dashboard"}
-              className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
-            >
-              Dashboard
-            </Link>
+          <div className="relative" ref={profileRef}>
             <button
-              onClick={handleLogout}
-              className="font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:text-cream"
+              type="button"
+              aria-expanded={profileOpen}
+              aria-label="Open profile menu"
+              onClick={() => setProfileOpen((open) => !open)}
+              className="flex items-center gap-1.5 rounded-full text-cream/80 transition hover:text-cream focus:outline-none focus:ring-2 focus:ring-ochre"
             >
-              Log out
+              <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-cream/30 bg-cream/10">
+                <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
+              </span>
+              <ChevronDownIcon className={`h-3.5 w-3.5 transition-transform ${profileOpen ? "rotate-180" : ""}`} aria-hidden="true" />
             </button>
-          </>
+
+            {profileOpen && (
+              <div className="absolute right-0 top-11 z-50 w-48 rounded-md border border-cream/15 bg-[#10141f] p-1.5 shadow-2xl shadow-navy/30">
+                <div className="border-b border-cream/10 px-3 py-2">
+                  <p className="font-mono text-[9px] uppercase tracking-widest text-cream/40">Signed in as</p>
+                  <p className="mt-1 truncate text-sm capitalize text-cream">{user.role}</p>
+                </div>
+                <Link
+                  to={user.role === "seller" ? "/seller-dashboard" : "/customer-dashboard"}
+                  onClick={() => setProfileOpen(false)}
+                  className="mt-1 block rounded-sm px-3 py-2 font-mono text-[11px] uppercase tracking-widest text-cream/75 transition hover:bg-cream/10 hover:text-cream"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full rounded-sm px-3 py-2 text-left font-mono text-[11px] uppercase tracking-widest text-cream/50 transition hover:bg-rust/15 hover:text-cream"
+                >
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
             <Link

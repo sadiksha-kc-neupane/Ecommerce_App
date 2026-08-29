@@ -57,3 +57,5 @@ export const fetchSellerOrders = () => request("/seller/orders", { auth: true })
 
 // ---- users ----
 export const fetchUsers = () => request("/fetch-users", { auth: true })
+export const fetchSingleUser = (id) => request(`/fetch-single/${id}`, { auth: true })
+export const updateUser = (id, payload) => request(`/update-users/${id}`, { method: "PATCH", body: payload, auth: true })

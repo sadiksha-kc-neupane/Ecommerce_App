@@ -9,6 +9,7 @@ import Footer from "../components/Footer.jsx"
 import { fetchProducts, addToCart } from "../lib/api.js"
 import { useCart } from "../context/CartContext.jsx"
 import { toast } from "sonner"
+import Pricing from "./pricing.jsx"
 
 export default function Home() {
   const { refreshCart } = useCart()
@@ -17,6 +18,7 @@ export default function Home() {
   const [error, setError] = useState(null)
   const [activeCategory, setActiveCategory] = useState("all")
 
+  
   useEffect(() => {
     fetchProducts()
       .then((res) => setProducts(res.data || []))
@@ -52,7 +54,7 @@ export default function Home() {
         )}
 
         <section className="mt-16 pb-20">
-          <div className="mx-auto mb-6 flex max-w-6xl items-end justify-between gap-4 px-6">
+          <div className="mx-auto mb-6 flex max-w-6xl items-end justify-between gap-4 px-6 :root">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
                 The full catalog
@@ -80,6 +82,8 @@ export default function Home() {
       <div className="pb-16">
         <TrustBadges />
       </div>
+
+      <Pricing/>
       <Footer />
     </div>
   )
