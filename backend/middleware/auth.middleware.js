@@ -8,7 +8,7 @@ export const verifyToken = (req, res, next) => {
         return res.status(401).json({ message: "No token provided" })
     }
 
-    const token = authHeader.split(" ")[1]
+    const token = authHeader.split(" ")[1] 
 
     try {
         // secret now comes from .env instead of being hardcoded
@@ -27,3 +27,10 @@ export const requireRole = (...allowedRoles) => (req, res, next) => {
     }
     next()
 }
+
+
+
+
+
+
+

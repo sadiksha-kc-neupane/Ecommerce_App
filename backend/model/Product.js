@@ -12,8 +12,12 @@ const Product = sequelize.define("Product", {
     allowNull: false,
   },
   category: {
-    type: DataTypes.ENUM("electronics", "materials", "agriculture", "cosmetics"),
+    type: DataTypes.ENUM("smartboard", "desktop", "laptop", "components", "cctv", "printer_scanner", "networking"),
     allowNull: false,
+  },
+  subcategory: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   productName: {
     type: DataTypes.STRING,
@@ -35,9 +39,10 @@ const Product = sequelize.define("Product", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  productImage: {
-    type: DataTypes.STRING,
+  productImages: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: true,
+    defaultValue: [],
   },
 }, {
   tableName: "products",

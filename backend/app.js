@@ -85,7 +85,7 @@ import envConfig from './config/env.js'
 const app = express()
 app.use(express.json()) //middleware converting in to json
 app.use(cors({
-  origin: "*",
+  origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
 }))
 
 
