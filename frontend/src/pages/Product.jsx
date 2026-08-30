@@ -11,7 +11,7 @@ import EmptyState from "../components/ui/EmptyState.jsx"
 import Badge from "../components/ui/Badge.jsx"
 import Price from "../components/ui/Price.jsx"
 import SectionHeading from "../components/ui/SectionHeading.jsx"
-import { buttonVariants } from "../components/ui/Button.jsx"
+import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/categories.js"
 import { isLowStock } from "../lib/stock.js"
 import {
@@ -19,7 +19,7 @@ import {
   fetchProducts,
   addToCart,
 } from "../lib/api.js"
-import { useCart } from "../context/CartContext.jsx"
+import { useCart } from "../context/useCart.js"
 
 function ProductDetailSkeleton() {
   return (

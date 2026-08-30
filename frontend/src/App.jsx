@@ -1,51 +1,46 @@
-// function App() {
-//   let name = "diksha";
-//   let caste = "K.C.";
-//   let games = ["pokemon", "freefire"];
-//   let information = {
-//     name: "diksha",
-//     class: 12,
-//     roll_no: 21,
-//   };
-//   return (
-//     <>
-//       <h1>
-//         Hello {name} {caste}
-//       </h1>
-//       <h2>i love {games[0]}</h2>
-//       <h2>i study in class {information.class} </h2>
-//     </>
-//   );
-// }
-
-// export default App;
-
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CartProvider } from "./context/CartContext.jsx";
-import Contact from "./pages/contact";
-import About from "./pages/about";
+import { CartProvider } from "./context/CartProvider.jsx";
 import Home from "./components/Home.jsx";
-import Signup from "./pages/signup";
-import Signin from "./pages/signin";
-import Forgot from "./pages/forgotPassword";
-import Otp from "./pages/otp";
-import Product from "./pages/Product";
-import CreateProduct from "./pages/create-Product";
-import Productlist from "./pages/product-list";
-import SellerDashboard from "./pages/seller-dashboard";
-import CustomerDashboard from "./pages/customer-dashboard";
-import Checkout from "./pages/checkout";
-import Cart from "./pages/cart";
-import OrderConfirmation from "./pages/order-confirmation";
-import NotFound from "./pages/NotFound";
 import PageTransition from "./components/PageTransition.jsx";
 import RoleRoute from "./components/RoleRoute.jsx";
 import { Toaster } from "./components/ui/sonner.jsx";
+
+// Route-level code-splitting: the heavy/secondary pages (dashboards,
+// checkout, cart, product detail, auth, …) are fetched on demand instead of
+// being in the initial bundle. The seller dashboard is the biggest win — it is
+// the only consumer of recharts.
+const Contact = lazy(() => import("./pages/contact"));
+const About = lazy(() => import("./pages/about"));
+const Signup = lazy(() => import("./pages/signup"));
+const Signin = lazy(() => import("./pages/signin"));
+const Forgot = lazy(() => import("./pages/forgotPassword"));
+const Otp = lazy(() => import("./pages/otp"));
+const Product = lazy(() => import("./pages/Product"));
+const CreateProduct = lazy(() => import("./pages/create-Product"));
+const Productlist = lazy(() => import("./pages/product-list"));
+const SellerDashboard = lazy(() => import("./pages/seller-dashboard"));
+const CustomerDashboard = lazy(() => import("./pages/customer-dashboard"));
+const Checkout = lazy(() => import("./pages/checkout"));
+const Cart = lazy(() => import("./pages/cart"));
+const OrderConfirmation = lazy(() => import("./pages/order-confirmation"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+function PageFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-paper">
+      <span className="font-mono text-xs uppercase tracking-widest text-navy/40">
+        Loading…
+      </span>
+    </div>
+  );
+}
 
 function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+      <Suspense fallback={<PageFallback />}>
       <Routes>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
@@ -65,6 +60,7 @@ function App() {
         <Route path="/order-confirmation/:id" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><OrderConfirmation /></RoleRoute></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
+      </Suspense>
       <Toaster duration={2500} />
       </BrowserRouter>
     </CartProvider>

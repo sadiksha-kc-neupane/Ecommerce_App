@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
-import { buttonVariants } from "../components/ui/Button.jsx"
+import { buttonVariants } from "../components/ui/buttonVariants.js"
 import SectionHeading from "../components/ui/SectionHeading.jsx"
 import { CATEGORIES, CATEGORY_COLORS } from "../lib/categories.js"
 import {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { buttonVariants } from "../ui/Button.jsx"
+import { buttonVariants } from "../ui/buttonVariants.js"
 
 // Closing "how to start shopping" band on the homepage. The three numbered
 // steps reflect the real, working customer flow (catalog -> cart -> checkout

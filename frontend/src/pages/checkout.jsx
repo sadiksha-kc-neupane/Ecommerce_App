@@ -4,11 +4,11 @@ import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import OrderSummary from "../components/cart/OrderSummary.jsx"
 import EmptyState from "../components/ui/EmptyState.jsx"
-import { buttonVariants } from "../components/ui/Button.jsx"
+import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../components/ui/select.jsx"
 import { fetchCart, buyProduct } from "../lib/api.js"
 import { toLine } from "../lib/cart.js"
-import { useCart } from "../context/CartContext.jsx"
+import { useCart } from "../context/useCart.js"
 
 // The backend stores paymentMethod as a free string on Order (no ENUM, no
 // validation), so these controlled options are safe to send as-is.

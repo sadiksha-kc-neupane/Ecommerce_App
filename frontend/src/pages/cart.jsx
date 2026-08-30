@@ -6,11 +6,11 @@ import Footer from "../components/Footer.jsx"
 import QuantitySelector from "../components/ui/QuantitySelector.jsx"
 import OrderSummary, { LineImage } from "../components/cart/OrderSummary.jsx"
 import EmptyState from "../components/ui/EmptyState.jsx"
-import { buttonVariants } from "../components/ui/Button.jsx"
+import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { cn } from "../lib/utils.js"
 import { fetchCart, removeFromCart, updateCartItem } from "../lib/api.js"
 import { toLine } from "../lib/cart.js"
-import { useCart } from "../context/CartContext.jsx"
+import { useCart } from "../context/useCart.js"
 
 export default function Cart() {
   const { refreshCart } = useCart()

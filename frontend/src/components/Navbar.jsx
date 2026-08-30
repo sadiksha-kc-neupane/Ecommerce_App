@@ -9,7 +9,7 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline"
-import { useCart } from "../context/CartContext.jsx"
+import { useCart } from "../context/useCart.js"
 import { getCurrentUser } from "../lib/auth.js"
 import { CATEGORIES } from "../lib/categories.js"
 

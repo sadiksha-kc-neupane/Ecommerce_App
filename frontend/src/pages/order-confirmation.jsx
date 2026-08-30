@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import OrderSummary from "../components/cart/OrderSummary.jsx"
 import EmptyState from "../components/ui/EmptyState.jsx"
-import { buttonVariants } from "../components/ui/Button.jsx"
+import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { fetchSingleOrder } from "../lib/api.js"
 
 // Order confirmation shown right after a successful checkout. The checkout

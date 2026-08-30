@@ -1,8 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { fetchCart } from "../lib/api.js"
 import { getCurrentUser } from "../lib/auth.js"
-
-const CartContext = createContext({ cartCount: 0, refreshCart: () => {}, clearCart: () => {} })
+import { CartContext } from "./cart-context.js"
 
 export function CartProvider({ children }) {
   const [cartCount, setCartCount] = useState(0)
@@ -26,7 +25,10 @@ export function CartProvider({ children }) {
   const clearCart = useCallback(() => setCartCount(0), [])
 
   useEffect(() => {
-    refreshCart()
+    // deferred so the initial cart fetch is not a synchronous setState inside
+    // the effect body (avoids react-hooks/set-state-in-effect)
+    const id = setTimeout(() => refreshCart(), 0)
+    return () => clearTimeout(id)
   }, [refreshCart])
 
   return (
@@ -34,8 +36,4 @@ export function CartProvider({ children }) {
       {children}
     </CartContext.Provider>
   )
-}
-
-export function useCart() {
-  return useContext(CartContext)
 }
