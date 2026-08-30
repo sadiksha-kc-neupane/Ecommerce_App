@@ -5,22 +5,22 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 // Static slide content for now -- swap for data from an API/CMS later if needed
 const SLIDES = [
   {
-    eyebrow: "New arrivals",
-    heading: "Everything on the shelf, tagged and priced.",
-    body: "Electronics, materials, agriculture, cosmetics in one catalog.",
+    eyebrow: "IT hardware supplier",
+    heading: "Laptops, desktops, servers & components in one catalog.",
+    body: "Every listing shows real-time stock, fair prices and genuine products.",
     cta: "Shop now",
   },
   {
-    eyebrow: "This week",
-    heading: "Stock counts you can trust.",
-    body: "Every listing shows exactly what's left on the shelf.",
+    eyebrow: "Live stock counts",
+    heading: "Stock levels you can trust.",
+    body: "Each product shows exactly what's left on the shelf before you order.",
     cta: "View catalog",
   },
   {
-    eyebrow: "Just landed",
-    heading: "New sellers, new categories.",
-    body: "More listings added to the catalog every week.",
-    cta: "Browse new",
+    eyebrow: "From CCTV to smartboards",
+    heading: "Everything your business needs, under one roof.",
+    body: "CCTV, networking, printers, smartboards and more — all in stock.",
+    cta: "Browse products",
   },
 ]
 
@@ -45,12 +45,12 @@ export default function HeroSlider() {
   const slide = SLIDES[index]
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#FDF0DD] to-cream text-navy">
-      {/* ghost monogram gives the warm gradient some subtle depth.
+    <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-cream to-paper text-navy">
+      {/* ghost monogram gives the hero some subtle depth.
           Static background element, NOT part of the slides. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-10 right-2 select-none text-[11rem] leading-none text-navy/[0.05] sm:text-[16rem] font-display"
+        className="pointer-events-none absolute -bottom-10 right-2 select-none text-[11rem] leading-none text-ochre/[0.06] sm:text-[16rem] font-display"
       >
         D&S
       </span>
@@ -76,19 +76,18 @@ export default function HeroSlider() {
             </p>
 
             <h1
-              className="mt-5 max-w-3xl text-3xl leading-[1.08] font-display sm:text-5xl lg:text-6xl"
-              style={{ fontWeight: 350 }}
+              className="mt-5 max-w-3xl font-display text-3xl font-bold leading-[1.1] sm:text-5xl lg:text-6xl"
             >
               {slide.heading}
             </h1>
 
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-navy/70 sm:text-base">
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-navy/60 sm:text-base">
               {slide.body}
             </p>
 
             <button
               onClick={() => navigate("/product-list")}
-              className="group mt-8 inline-flex items-center gap-3 rounded-sm bg-ochre px-7 py-3 font-mono text-[11px] uppercase tracking-widest text-navy transition-colors hover:bg-navy hover:text-cream"
+              className="group mt-8 inline-flex items-center gap-3 rounded-lg bg-ochre px-7 py-3 font-mono text-[11px] uppercase tracking-widest text-navy transition-colors hover:bg-navy hover:text-cream"
             >
               {slide.cta}
               <span className="transition-transform duration-300 group-hover:translate-x-1">

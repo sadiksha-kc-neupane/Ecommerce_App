@@ -35,7 +35,7 @@ export default function CategoryFilter({ activeCategory, onChange }) {
                   style={
                     value !== "all"
                       ? {
-                          backgroundColor: active ? "#E85D4E" : dotColor,
+                          backgroundColor: active ? "#D97706" : dotColor,
                         }
                       : undefined
                   }

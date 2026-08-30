@@ -5,22 +5,20 @@ import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import AccountDetailsSection from "../components/AccountDetailsSection.jsx"
 import DashboardSidebar from "../components/DashboardSidebar.jsx"
+import EmptyState from "../components/ui/EmptyState.jsx"
+import Badge from "../components/ui/Badge.jsx"
+import Price from "../components/ui/Price.jsx"
+import { buttonVariants } from "../components/ui/Button.jsx"
+import { cn } from "../lib/utils.js"
 import { useCart } from "../context/CartContext.jsx"
 import { getCurrentUser } from "../lib/auth.js"
 import { fetchOrders, fetchCart, fetchSingleUser, cancelOrder as cancelOrderApi, removeFromCart } from "../lib/api.js"
+import { orderStatusMeta } from "../lib/orders.js"
 
 // Statuses that are no longer "in progress" — delivered (done) or cancelled (refunded).
 const FINAL_STATUSES = ["delivered", "cancelled"]
 // Same disallowed-for-cancel list as orderController.js's cancelOrder route.
 const NON_CANCELLABLE_STATUSES = ["shipped", "delivered", "cancelled"]
-
-const STATUS_STYLES = {
-  pending: "bg-ochre/20 text-ochre-ink",
-  processing: "bg-navy/10 text-navy",
-  shipped: "bg-navy/10 text-navy",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-rust/15 text-rust",
-}
 
 const NAV_ITEMS = [
   { key: "overview", label: "Overview" },
@@ -51,9 +49,6 @@ export default function CustomerDashboard() {
     if (!isLoggedIn) return
     let cancelled = false
 
-    // the decoded token only carries { id, role }, so fetch the real
-    // username/email for the sidebar identity block via fetch-single
-    // (returns an array; see fetchSingle in userController.js)
     fetchSingleUser(currentUser?.id)
       .then((data) => {
         if (cancelled) return
@@ -135,7 +130,6 @@ export default function CustomerDashboard() {
 
       {isLoggedIn && (
         <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10 lg:flex-row">
-          {/* ---------- Sidebar ---------- */}
           <DashboardSidebar
             navItems={NAV_ITEMS}
             activeKey={activeSection}
@@ -145,7 +139,6 @@ export default function CustomerDashboard() {
             onLogout={handleLogout}
           />
 
-          {/* ---------- Content ---------- */}
           <section className="min-w-0 flex-1">
             {activeSection === "overview" && (
               <Overview
@@ -185,14 +178,36 @@ export default function CustomerDashboard() {
   )
 }
 
+/* ============================== Shared bits ============================== */
+
+function SectionHeader({ eyebrow, title, action }) {
+  return (
+    <div className="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">{eyebrow}</p>
+        <h1 className="mt-1 text-3xl text-navy font-display">{title}</h1>
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
+  )
+}
+
+function ErrorPanel({ message }) {
+  return (
+    <EmptyState
+      title="Something went wrong"
+      body={message}
+      className="mx-0 max-w-none"
+    />
+  )
+}
+
 /* ============================== Overview ============================== */
 
 function Overview({ orders, loading, error, onViewOrders }) {
   const stats = useMemo(() => {
     const total = orders.length
     const active = orders.filter((o) => !FINAL_STATUSES.includes(o.status)).length
-    // Only count non-cancelled orders toward "total spent": cancelled orders
-    // are refunded so the money was not actually kept/spent.
     const spent = orders
       .filter((o) => o.status !== "cancelled")
       .reduce((sum, o) => sum + Number(o.totalAmount || 0), 0)
@@ -204,38 +219,36 @@ function Overview({ orders, loading, error, onViewOrders }) {
   }
 
   if (error) {
-    return (
-      <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-        <p className="font-mono text-sm text-rust">{error}</p>
-      </div>
-    )
+    return <ErrorPanel message={error} />
   }
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Your account</p>
-      <h1 className="mt-1 mb-8 text-3xl text-navy font-display">Overview</h1>
+      <SectionHeader eyebrow="Your account" title="Overview" />
 
       {orders.length === 0 ? (
         <EmptyState
           title="No orders yet"
           body="Browse the catalog and place your first order — your stats will show up here."
-          cta="Browse the catalog"
-          to="/product-list"
+          action={
+            <Link to="/product-list" className={buttonVariants({ variant: "primary", size: "md" })}>
+              Browse the catalog
+            </Link>
+          }
         />
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-3">
-            <StatCard label="Orders" value={stats.total} />
-            <StatCard label="In progress" value={stats.active} />
-            <StatCard label="Total spent" value={`$${stats.spent.toFixed(2)}`} />
+            <StatCard label="Orders" value={String(stats.total)} />
+            <StatCard label="In progress" value={String(stats.active)} />
+            <StatCard label="Total spent">
+              <Price value={stats.spent} className="font-mono text-2xl font-semibold text-navy" />
+            </StatCard>
           </div>
 
           <div className="mt-8">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
-                Recent orders
-              </h2>
+              <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">Recent orders</h2>
               <button
                 type="button"
                 onClick={onViewOrders}
@@ -252,11 +265,16 @@ function Overview({ orders, loading, error, onViewOrders }) {
   )
 }
 
-function StatCard({ label, value }) {
+function StatCard({ label, value, children }) {
   return (
-    <div className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
+    <div className="relative overflow-hidden rounded-lg border border-navy/10 bg-white p-5 shadow-card">
+      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-0.5 bg-ochre/70" />
       <p className="font-mono text-[10px] uppercase tracking-widest text-navy/50">{label}</p>
-      <p className="mt-2 font-mono text-2xl font-semibold text-navy">{value}</p>
+      {value !== undefined ? (
+        <p className="mt-2 font-mono text-2xl font-semibold text-navy">{value}</p>
+      ) : (
+        children
+      )}
     </div>
   )
 }
@@ -266,25 +284,21 @@ function StatCard({ label, value }) {
 function OrdersSection({ orders, loading, error, cancellingId, onCancel }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Your account</p>
-      <h1 className="mt-1 mb-8 text-3xl text-navy font-display">Order history</h1>
+      <SectionHeader eyebrow="Your account" title="Order history" />
 
-      {loading && (
-        <p className="font-mono text-sm text-navy/50">Loading orders...</p>
-      )}
+      {loading && <p className="font-mono text-sm text-navy/50">Loading orders...</p>}
 
-      {!loading && error && (
-        <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-          <p className="font-mono text-sm text-rust">{error}</p>
-        </div>
-      )}
+      {!loading && error && <ErrorPanel message={error} />}
 
       {!loading && !error && orders.length === 0 && (
         <EmptyState
           title="You haven't placed any orders yet."
           body="When you do, they'll show up here with live status and cancellation."
-          cta="Browse the catalog"
-          to="/product-list"
+          action={
+            <Link to="/product-list" className={buttonVariants({ variant: "primary", size: "md" })}>
+              Browse the catalog
+            </Link>
+          }
         />
       )}
 
@@ -297,60 +311,61 @@ function OrdersSection({ orders, loading, error, cancellingId, onCancel }) {
 
 function OrderList({ orders, cancellingId, onCancel, compact }) {
   return (
-    <ul className="flex flex-col gap-6">
-      {orders.map((order) => (
-        <li
-          key={order.id}
-          className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15"
-        >
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <span
-                className={`rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest ${STATUS_STYLES[order.status] || "bg-navy/10 text-navy"}`}
-              >
-                {order.status}
-              </span>
-              <span className="font-mono text-xs text-navy/50">
-                {new Date(order.createdAt).toLocaleDateString()}
-              </span>
+    <ul className="flex flex-col gap-5">
+      {orders.map((order) => {
+        const status = orderStatusMeta(order.status)
+        return (
+          <li
+            key={order.id}
+            className="overflow-hidden rounded-lg border border-navy/10 bg-white p-5 shadow-card"
+          >
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge tone={status.tone}>{status.label}</Badge>
+                <span className="font-mono text-xs text-navy/50">
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              {!compact && !NON_CANCELLABLE_STATUSES.includes(order.status) && (
+                <button
+                  onClick={() => onCancel(order.id)}
+                  disabled={cancellingId === order.id}
+                  className="rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
+                >
+                  {cancellingId === order.id ? "Cancelling..." : "Cancel order"}
+                </button>
+              )}
             </div>
-            {!compact && !NON_CANCELLABLE_STATUSES.includes(order.status) && (
-              <button
-                onClick={() => onCancel(order.id)}
-                disabled={cancellingId === order.id}
-                className="rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
-              >
-                {cancellingId === order.id ? "Cancelling..." : "Cancel order"}
-              </button>
-            )}
-          </div>
 
-          <ul className="mb-4 flex flex-col gap-2">
-            {(order.OrderItems || []).map((item) => (
-              <li
-                key={item.id}
-                className="flex flex-wrap items-center justify-between gap-2 border-b border-navy/10 pb-2 last:border-b-0"
-              >
-                <img
-                  src={item.Product?.productImages?.[0] || "https://placehold.co/48x48/F2EEE4/1C1B19?text=D&S"}
-                  alt={item.Product?.productName}
-                  className="h-10 w-10 rounded-md object-cover"
-                />
-                <span className="min-w-0 flex-1 truncate text-sm text-navy">
-                  {item.Product?.productName || "Deleted product"}
-                </span>
-                <span className="font-mono text-xs text-navy/60">
-                  Qty: {item.quantity} × ${Number(item.price).toFixed(2)} = ${(Number(item.price) * item.quantity).toFixed(2)}
-                </span>
-              </li>
-            ))}
-          </ul>
+            <ul className="mb-4 flex flex-col gap-2">
+              {(order.OrderItems || []).map((item) => (
+                <li
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-2 border-b border-navy/10 pb-2 last:border-b-0"
+                >
+                  <img
+                    src={item.Product?.productImages?.[0] || "https://placehold.co/48x48/F2EEE4/1C1B19?text=D&S"}
+                    alt={item.Product?.productName}
+                    className="h-10 w-10 rounded-md object-cover"
+                  />
+                  <span className="min-w-0 flex-1 truncate text-sm text-navy">
+                    {item.Product?.productName || "Deleted product"}
+                  </span>
+                  <span className="font-mono text-xs text-navy/60">
+                    Qty: {item.quantity} × <Price value={item.price} /> ={" "}
+                    <Price value={Number(item.price) * item.quantity} />
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-          <p className="text-right font-mono text-lg font-semibold text-ochre-ink">
-            Total: ${Number(order.totalAmount).toFixed(2)}
-          </p>
-        </li>
-      ))}
+            <div className="flex items-center justify-between border-t border-navy/10 pt-3">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">Order total</span>
+              <Price value={order.totalAmount} className="font-mono text-lg font-semibold text-ochre-ink" />
+            </div>
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -362,28 +377,25 @@ function CartSection({ items, loading, error, removingId, onRemove }) {
     (sum, item) => sum + Number(item.Product?.price) * item.quantity,
     0
   )
+  const itemCount = items.reduce((n, i) => n + i.quantity, 0)
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Your basket</p>
-      <h1 className="mt-1 mb-8 text-3xl text-navy font-display">Shopping cart</h1>
+      <SectionHeader eyebrow="Your basket" title="Shopping cart" />
 
-      {loading && (
-        <p className="font-mono text-sm text-navy/50">Loading cart...</p>
-      )}
+      {loading && <p className="font-mono text-sm text-navy/50">Loading cart...</p>}
 
-      {!loading && error && (
-        <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-          <p className="font-mono text-sm text-rust">{error}</p>
-        </div>
-      )}
+      {!loading && error && <ErrorPanel message={error} />}
 
       {!loading && !error && items.length === 0 && (
         <EmptyState
           title="Your cart is empty."
           body="Add something you love and it'll show up here ready to check out."
-          cta="Browse the catalog"
-          to="/product-list"
+          action={
+            <Link to="/product-list" className={buttonVariants({ variant: "primary", size: "md" })}>
+              Browse the catalog
+            </Link>
+          }
         />
       )}
 
@@ -396,7 +408,7 @@ function CartSection({ items, loading, error, removingId, onRemove }) {
               return (
                 <li
                   key={item.id}
-                  className="rounded-md bg-paper p-4 outline outline-1 -outline-offset-1 outline-navy/15"
+                  className="rounded-lg border border-navy/10 bg-white p-4 shadow-card"
                 >
                   <div className="flex items-start gap-4">
                     <img
@@ -406,16 +418,14 @@ function CartSection({ items, loading, error, removingId, onRemove }) {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-lg text-navy font-display">
-                        {product?.productName}
-                      </p>
+                      <p className="truncate text-lg text-navy font-display">{product?.productName || "Product"}</p>
                       <p className="mt-1 font-mono text-xs text-navy/60">
-                        ${Number(product?.price).toFixed(2)} each · Qty: {item.quantity}
+                        <Price value={product?.price} /> each · Qty: {item.quantity}
                       </p>
                     </div>
 
-                    <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
-                      ${lineTotal.toFixed(2)}
+                    <p className="flex-shrink-0">
+                      <Price value={lineTotal} className="font-mono text-sm font-semibold text-ochre-ink" />
                     </p>
                   </div>
 
@@ -433,39 +443,22 @@ function CartSection({ items, loading, error, removingId, onRemove }) {
             })}
           </ul>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
-            <p className="font-mono text-xs uppercase tracking-widest text-navy/60">
-              Total ({items.reduce((n, i) => n + i.quantity, 0)} items)
-            </p>
-            <p className="font-mono text-xl font-semibold text-ochre-ink">
-              ${runningTotal.toFixed(2)}
-            </p>
+          <div className="mt-8 rounded-lg border border-navy/10 bg-white p-5 shadow-card">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p className="font-mono text-xs uppercase tracking-widest text-navy/60">
+                Total ({itemCount} {itemCount === 1 ? "item" : "items"})
+              </p>
+              <Price value={runningTotal} className="font-mono text-xl font-semibold text-ochre-ink" />
+            </div>
             <Link
               to="/checkout"
-              className="rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
+              className={cn(buttonVariants({ variant: "primary", size: "lg" }), "mt-4 w-full")}
             >
-              Checkout
+              Proceed to checkout
             </Link>
           </div>
         </>
       )}
-    </div>
-  )
-}
-
-/* ============================== Shared ============================== */
-
-function EmptyState({ title, body, cta, to }) {
-  return (
-    <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-      <p className="text-lg text-navy font-display">{title}</p>
-      <p className="mt-2 text-sm text-navy/60">{body}</p>
-      <Link
-        to={to}
-        className="mt-5 inline-block rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
-      >
-        {cta}
-      </Link>
     </div>
   )
 }

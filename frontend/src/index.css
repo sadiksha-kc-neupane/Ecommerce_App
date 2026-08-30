@@ -1,28 +1,28 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-/* shadcn/ui design tokens, mapped onto the existing navy/cream/ochre palette */
+/* shadcn/ui design tokens, mapped onto the warm Dipti&Suppliers palette */
 :root {
-  --background: #fbf7f0;
+  --background: #ffffff;
   --foreground: #1c1b19;
-  --card: #fbf7f0;
+  --card: #ffffff;
   --card-foreground: #1c1b19;
-  --popover: #fbf7f0;
+  --popover: #ffffff;
   --popover-foreground: #1c1b19;
-  --primary: #cd1919;
+  --primary: #d97706;
   --primary-foreground: #1c1b19;
-  --secondary: #f2eee4;
+  --secondary: #f7f3ec;
   --secondary-foreground: #1c1b19;
-  --muted: #f2eee4;
-  --muted-foreground: color-mix(in srgb, #1c1b19 60%, transparent);
-  --accent: #f2eee4;
+  --muted: #f7f3ec;
+  --muted-foreground: color-mix(in srgb, #1c1b19 58%, transparent);
+  --accent: #f7f3ec;
   --accent-foreground: #1c1b19;
-  --destructive: #b33f2e;
-  --destructive-foreground: #fbf7f0;
-  --border: color-mix(in srgb, #1c1b19 15%, transparent);
-  --input: color-mix(in srgb, #1c1b19 15%, transparent);
-  --ring: #e85d4e;
-  --radius: 0.375rem;
+  --destructive: #c2410c;
+  --destructive-foreground: #ffffff;
+  --border: color-mix(in srgb, #1c1b19 14%, transparent);
+  --input: color-mix(in srgb, #1c1b19 16%, transparent);
+  --ring: #d97706;
+  --radius: 0.6rem;
 }
 
 @theme inline {
@@ -60,6 +60,14 @@
   from { opacity: 0; transform: translateY(-4px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+@keyframes sheet-in-right {
+  from { opacity: 0.6; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes sheet-in-left {
+  from { opacity: 0.6; transform: translateX(-100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
 [data-slot="alert-dialog-overlay"][data-state="open"] {
   animation: overlay-in 150ms ease-out both;
 }
@@ -72,7 +80,9 @@
 @media (prefers-reduced-motion: reduce) {
   [data-slot="alert-dialog-overlay"][data-state="open"],
   [data-slot="alert-dialog-content"][data-state="open"],
-  [data-slot="select-content"][data-state="open"] {
+  [data-slot="select-content"][data-state="open"],
+  [data-slot="sheet-overlay"][data-state="open"],
+  [data-slot="sheet-content"][data-state="open"] {
     animation: none;
   }
 }
@@ -115,7 +125,7 @@
   border-radius: 9999px;
 }
 .scroll-slim::-webkit-scrollbar-thumb:hover {
-  background: #e85d4e;
+  background: #d97706;
 }
 
 /* Base styles: font rendering + smooth scrolling + a consistent focus-visible

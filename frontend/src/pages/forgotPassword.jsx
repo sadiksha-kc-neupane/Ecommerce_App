@@ -11,7 +11,7 @@ function Forgot() {
         >
           Password reset — coming soon
         </h1>
-        <p className="text-slate-600">
+        <p className="text-navy/60">
           Password reset isn&apos;t available yet. This page will be enabled
           once the feature ships.
         </p>

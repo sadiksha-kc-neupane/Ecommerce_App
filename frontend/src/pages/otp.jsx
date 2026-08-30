@@ -11,7 +11,7 @@ function Otp() {
         >
           OTP verification — coming soon
         </h1>
-        <p className="text-slate-600">
+        <p className="text-navy/60">
           OTP codes can&apos;t be sent or verified yet. This page will be
           enabled once the feature ships.
         </p>

@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react"
 import { Link, Navigate } from "react-router-dom"
+import { toast } from "sonner"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
-import { fetchCart, removeFromCart } from "../lib/api.js"
+import QuantitySelector from "../components/ui/QuantitySelector.jsx"
+import OrderSummary, { LineImage } from "../components/cart/OrderSummary.jsx"
+import EmptyState from "../components/ui/EmptyState.jsx"
+import { buttonVariants } from "../components/ui/Button.jsx"
+import { cn } from "../lib/utils.js"
+import { fetchCart, removeFromCart, updateCartItem } from "../lib/api.js"
+import { toLine } from "../lib/cart.js"
 import { useCart } from "../context/CartContext.jsx"
 
 export default function Cart() {
@@ -10,159 +17,201 @@ export default function Cart() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [busyId, setBusyId] = useState(null)
   const [removingId, setRemovingId] = useState(null)
 
   const isLoggedIn = Boolean(localStorage.getItem("token"))
 
   useEffect(() => {
     if (!isLoggedIn) return
-
     let cancelled = false
-
     async function load() {
       try {
         const res = await fetchCart()
-        // response shape: { cart: { CartItems: [...] } } -- each CartItem
-        // has a nested Product via include: [Product] in cartController.js
-        if (!cancelled) setItems(res.cart?.CartItems || [])
+        if (!cancelled) setItems((res.cart?.CartItems || []).map(toLine))
       } catch (err) {
         if (!cancelled) setError(err.message)
       } finally {
         if (!cancelled) setLoading(false)
       }
     }
-
     load()
     return () => {
       cancelled = true
     }
   }, [isLoggedIn])
 
-  async function handleRemove(cartItemId) {
+  async function handleRemove(id) {
     setError(null)
+    setRemovingId(id)
     try {
-      setRemovingId(cartItemId)
-      await removeFromCart(cartItemId)
-      setItems((prev) => prev.filter((item) => item.id !== cartItemId))
+      await removeFromCart(id)
+      setItems((prev) => prev.filter((it) => it.id !== id))
       refreshCart()
+      toast.success("Removed from cart")
     } catch (err) {
-      setError(err.message)
+      toast.error(err.message)
     } finally {
       setRemovingId(null)
     }
   }
 
-  const runningTotal = items.reduce(
-    (sum, item) => sum + Number(item.Product?.price) * item.quantity,
-    0
-  )
+  async function handleQty(id, next) {
+    setError(null)
+    setBusyId(id)
+    try {
+      await updateCartItem(id, next)
+      setItems((prev) => prev.map((it) => (it.id === id ? { ...it, quantity: next } : it)))
+      refreshCart()
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setBusyId(null)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-paper">
       <Navbar />
 
-      <main className="mx-auto max-w-3xl px-6 py-12">
+      <main className="mx-auto max-w-6xl px-6 py-10">
         <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
           Your basket
         </p>
-        <h1
-          className="mt-3 mb-8 text-3xl leading-tight text-navy font-display"
-        >
+        <h1 className="mt-1 mb-8 font-display text-3xl font-bold text-navy">
           Shopping cart
         </h1>
 
         {!isLoggedIn && <Navigate to="/signin" replace />}
 
         {isLoggedIn && loading && (
-          <p className="font-mono text-sm text-navy/50">Loading cart...</p>
+          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+            <div className="space-y-4">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex animate-pulse gap-4 rounded-lg border border-navy/10 bg-white p-4">
+                  <div className="h-20 w-20 rounded-md bg-navy/10" />
+                  <div className="flex-1 space-y-2 py-1">
+                    <div className="h-4 w-1/2 rounded bg-navy/10" />
+                    <div className="h-3 w-2/3 rounded bg-navy/10" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="h-40 rounded-lg border border-navy/10 bg-white p-5">
+              <div className="h-10 w-1/2 animate-pulse rounded bg-navy/10" />
+            </div>
+          </div>
         )}
 
         {isLoggedIn && !loading && error && (
-          <div className="rounded-md bg-cream p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-            <p className="font-mono text-sm text-rust">{error}</p>
-          </div>
+          <EmptyState title="Couldn't load your cart" body={error} className="max-w-md" />
         )}
 
         {isLoggedIn && !loading && !error && items.length === 0 && (
-          <div className="rounded-md bg-cream p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-            <p className="text-navy/70">Your cart is empty.</p>
-            <Link
-              to="/product-list"
-              className="mt-4 inline-block rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
-            >
-              Browse the catalog
-            </Link>
-          </div>
+          <EmptyState
+            title="Your cart is empty"
+            body="Browse the catalog and add something to your basket."
+            className="max-w-md"
+            action={
+              <Link to="/product-list" className={buttonVariants({ variant: "primary", size: "md" })}>
+                Continue shopping
+              </Link>
+            }
+          />
         )}
 
-        {isLoggedIn && !loading && items.length > 0 && (
-          <>
+        {isLoggedIn && !loading && !error && items.length > 0 && (
+          <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+            {/* Item rows */}
             <ul className="flex flex-col gap-4">
               {items.map((item) => {
-                const product = item.Product
-                const lineTotal = Number(product?.price) * item.quantity
+                const maxQty = Math.max(item.quantity, item.stock)
                 return (
                   <li
                     key={item.id}
-                    className="rounded-md bg-cream p-4 outline outline-1 -outline-offset-1 outline-navy/15"
+                    className="rounded-lg border border-navy/10 bg-white p-4"
                   >
-                    <div className="flex items-start gap-4">
-                      <img
-                        src={product?.productImages?.[0] || "https://placehold.co/96x96/F2EEE4/1C1B19?text=D&S"}
-                        alt={product?.productName}
-                        className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
-                      />
+                    <div className="flex gap-4">
+                      <Link
+                        to={item.productId ? `/product/${item.productId}` : "/product-list"}
+                        className="shrink-0"
+                      >
+                        <LineImage name={item.name} image={item.image} className="h-20 w-20 rounded-md" />
+                      </Link>
 
                       <div className="min-w-0 flex-1">
-                        <p
-                          className="truncate text-lg text-navy font-display"
+                        <Link
+                          to={item.productId ? `/product/${item.productId}` : "/product-list"}
+                          className="line-clamp-2 font-display text-lg font-medium leading-snug text-navy transition hover:text-ochre"
                         >
-                          {product?.productName}
-                        </p>
-                        <p className="mt-1 font-mono text-xs text-navy/60">
-                          ${Number(product?.price).toFixed(2)} each · Qty:{" "}
-                          {item.quantity}
-                        </p>
+                          {item.name}
+                        </Link>
+                        <PriceText value={item.price} each={true} />
                       </div>
 
-                      <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
-                        ${lineTotal.toFixed(2)}
+                      <p className="hidden flex-shrink-0 font-mono text-sm font-semibold tabular-nums text-navy sm:block">
+                        <PriceText value={Number(item.price) * item.quantity} />
                       </p>
                     </div>
 
-                    <div className="mt-3 flex justify-end">
-                      <button
-                        onClick={() => handleRemove(item.id)}
-                        disabled={removingId === item.id}
-                        className="flex-shrink-0 rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
-                      >
-                        {removingId === item.id ? "Removing..." : "Remove"}
-                      </button>
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-navy/5 pt-4">
+                      <QuantitySelector
+                        value={item.quantity}
+                        onChange={(next) => handleQty(item.id, next)}
+                        min={1}
+                        max={maxQty}
+                        disabled={busyId === item.id}
+                        size="sm"
+                      />
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-sm font-semibold tabular-nums text-navy sm:hidden">
+                          <PriceText value={Number(item.price) * item.quantity} />
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemove(item.id)}
+                          disabled={removingId === item.id}
+                          className={buttonVariants({ variant: "danger", size: "sm" })}
+                        >
+                          {removingId === item.id ? "Removing…" : "Remove"}
+                        </button>
+                      </div>
                     </div>
                   </li>
                 )
               })}
             </ul>
 
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-md bg-cream p-5 outline outline-1 -outline-offset-1 outline-navy/15">
-              <p className="font-mono text-xs uppercase tracking-widest text-navy/60">
-                Total ({items.reduce((n, i) => n + i.quantity, 0)} items)
-              </p>
-              <p className="font-mono text-xl font-semibold text-ochre">
-                ${runningTotal.toFixed(2)}
-              </p>
+            {/* Summary + actions */}
+            <div className="space-y-4 lg:sticky lg:top-28 lg:self-start">
+              <OrderSummary items={items} showItems={false} title="Summary" />
               <Link
                 to="/checkout"
-                className="rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
+                className={cn(buttonVariants({ variant: "primary", size: "lg" }), "w-full")}
               >
-                Checkout
+                Proceed to checkout
+              </Link>
+              <Link
+                to="/product-list"
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")}
+              >
+                Continue shopping
               </Link>
             </div>
-          </>
+          </div>
         )}
       </main>
 
       <Footer />
     </div>
+  )
+}
+
+function PriceText({ value, each = false }) {
+  return (
+    <span className="font-mono text-xs text-navy/60">
+      ${Number(value).toFixed(2)}
+      {each ? " each" : ""}
+    </span>
   )
 }

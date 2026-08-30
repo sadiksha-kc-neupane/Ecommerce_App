@@ -241,7 +241,7 @@ export default function Signup() {
                   onClick={() => setForm({ ...form, role: opt.value })}
                   className={
                     form.role === opt.value
-                      ? "rounded-md bg-ochre/15 px-3 py-3 text-center text-sm text-navy outline outline-2 -outline-offset-2 outline-ochre transition"
+                      ? "rounded-md bg-ochre px-3 py-3 text-center text-sm text-navy outline outline-2 -outline-offset-2 outline-ochre transition"
                       : "rounded-md bg-white px-3 py-3 text-center text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 transition hover:outline-navy/40"
                   }
                 >

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Navbar from "../components/Navbar.jsx"
 import HeroSlider from "./HeroSlider.jsx"
-import CategoryFilter from "./CategoryFilter.jsx"
 import ProductGrid from "./ProductGrid.jsx"
 import TrustBadges from "./TrustBadges.jsx"
 import FeaturedRow from "./FeaturedRow.jsx"
@@ -10,15 +9,16 @@ import { fetchProducts, addToCart } from "../lib/api.js"
 import { useCart } from "../context/CartContext.jsx"
 import { toast } from "sonner"
 import WhyUs from "./WhyUs.jsx"
+import CategoryGrid from "./home/CategoryGrid.jsx"
+import HomeCTA from "./home/HomeCTA.jsx"
+import SectionHeading from "./ui/SectionHeading.jsx"
 
 export default function Home() {
   const { refreshCart } = useCart()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [activeCategory, setActiveCategory] = useState("all")
 
-  
   useEffect(() => {
     fetchProducts()
       .then((res) => setProducts(res.data || []))
@@ -36,54 +36,56 @@ export default function Home() {
     }
   }
 
-  const visibleProducts =
-    activeCategory === "all"
-      ? products
-      : products.filter((p) => p.category === activeCategory)
+  // real per-category counts for the category tiles
+  const categoryCounts = useMemo(() => {
+    const counts = {}
+    for (const p of products) counts[p.category] = (counts[p.category] || 0) + 1
+    return counts
+  }, [products])
+
+  // real products shown under "Popular right now": in-stock first, capped at 8
+  const popular = useMemo(() => {
+    const inStock = [...products].sort(
+      (a, b) => (Number(b.stock) > 0) - (Number(a.stock) > 0)
+    )
+    return inStock.slice(0, 8)
+  }, [products])
 
   return (
     <div className="min-h-screen bg-paper">
       <Navbar />
       <HeroSlider />
-      <CategoryFilter activeCategory={activeCategory} onChange={setActiveCategory} />
 
       <main>
-        {/* featured strip uses the unfiltered fetched list; grid stays filterable */}
+        <CategoryGrid counts={categoryCounts} />
+
         {!loading && !error && (
           <FeaturedRow products={products} onAddToCart={handleAddToCart} />
         )}
 
-        <section className="mt-16 pb-20">
-          <div className="mx-auto mb-6 flex max-w-6xl items-end justify-between gap-4 px-6 :root">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">
-                The full catalog
-              </p>
-              <h2
-                className="mt-2 text-2xl text-navy sm:text-3xl font-display"
-              >
-                {activeCategory === "all" ? "Everything in stock" : activeCategory}
-              </h2>
-            </div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-navy/40">
-              {visibleProducts.length} {visibleProducts.length === 1 ? "item" : "items"}
-            </p>
-          </div>
+        {/* why choose / trust */}
+        <div className="py-10">
+          <TrustBadges />
+        </div>
+        <WhyUs />
 
-          <ProductGrid
-            products={visibleProducts}
-            loading={loading}
-            error={error}
-            onAddToCart={handleAddToCart}
-          />
-        </section>
+        {/* curated / popular row */}
+        {!loading && !error && popular.length > 0 && (
+          <section className="py-16 sm:py-20">
+            <div className="mx-auto max-w-6xl px-6">
+              <SectionHeading
+                eyebrow="Popular right now"
+                title="In stock & ready to ship"
+              />
+              <div className="mt-8">
+                <ProductGrid products={popular} loading={loading} error={error} onAddToCart={handleAddToCart} />
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
-      <div className="pb-16">
-        <TrustBadges />
-      </div>
-
-      <WhyUs />
+      <HomeCTA />
       <Footer />
     </div>
   )

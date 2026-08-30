@@ -281,7 +281,7 @@ export default function Signin() {
                 Password
               </label>
               <Link
-                to="/forgot-password"
+                to="/forgotPassword"
                 className="font-mono text-[10px] uppercase tracking-widest text-ochre-ink hover:text-navy"
               >
                 Forgot password?

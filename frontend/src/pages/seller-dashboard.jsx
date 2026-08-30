@@ -6,8 +6,13 @@ import Footer from "../components/Footer.jsx"
 import AccountDetailsSection from "../components/AccountDetailsSection.jsx"
 import UserDashboardProducts from "../components/UserDashboardProducts.jsx"
 import DashboardSidebar from "../components/DashboardSidebar.jsx"
+import EmptyState from "../components/ui/EmptyState.jsx"
+import Badge from "../components/ui/Badge.jsx"
+import Price from "../components/ui/Price.jsx"
+import { buttonVariants } from "../components/ui/Button.jsx"
 import { getCurrentUser } from "../lib/auth.js"
 import { fetchProducts, fetchSellerOrders, fetchSingleUser } from "../lib/api.js"
+import { orderStatusMeta } from "../lib/orders.js"
 
 // Response shape from GET /seller/orders (see orderController.js fetchSellerOrders):
 // { orderItems: [{ id, orderId, productId, quantity, price, createdAt, updatedAt,
@@ -15,13 +20,6 @@ import { fetchProducts, fetchSellerOrders, fetchSingleUser } from "../lib/api.js
 //     paymentMethod, address, createdAt, updatedAt } }] }
 // One entry per product-per-order. Revenue for this seller = sum of
 // price (unit snapshot) * quantity across those order-items.
-const STATUS_STYLES = {
-  pending: "bg-ochre/20 text-ochre-ink",
-  processing: "bg-navy/10 text-navy",
-  shipped: "bg-navy/10 text-navy",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-rust/15 text-rust",
-}
 
 const NAV_ITEMS = [
   { key: "overview", label: "Overview" },
@@ -46,8 +44,6 @@ export default function SellerDashboard() {
     if (!isLoggedIn) return
     let cancelled = false
 
-    // decoded token only has { id, role }, so fetch real username for the
-    // sidebar identity block via fetch-single (returns an array)
     fetchSingleUser(currentUser?.id)
       .then((data) => {
         if (cancelled) return
@@ -98,7 +94,6 @@ export default function SellerDashboard() {
 
       {isLoggedIn && (
         <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10 lg:flex-row">
-          {/* ---------- Sidebar ---------- */}
           <DashboardSidebar
             navItems={NAV_ITEMS}
             activeKey={activeSection}
@@ -108,7 +103,6 @@ export default function SellerDashboard() {
             onLogout={handleLogout}
           />
 
-          {/* ---------- Content ---------- */}
           <section className="min-w-0 flex-1">
             {activeSection === "overview" && (
               <Overview
@@ -133,6 +127,38 @@ export default function SellerDashboard() {
   )
 }
 
+/* ============================== Shared bits ============================== */
+
+function SectionHeader({ eyebrow, title, action }) {
+  return (
+    <div className="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">{eyebrow}</p>
+        <h1 className="mt-1 text-3xl text-navy font-display">{title}</h1>
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
+  )
+}
+
+function ErrorPanel({ message }) {
+  return <EmptyState title="Something went wrong" body={message} className="mx-0 max-w-none" />
+}
+
+function StatCard({ label, value, children }) {
+  return (
+    <div className="relative overflow-hidden rounded-lg border border-navy/10 bg-white p-5 shadow-card">
+      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-0.5 bg-ochre/70" />
+      <p className="font-mono text-[10px] uppercase tracking-widest text-navy/50">{label}</p>
+      {value !== undefined ? (
+        <p className="mt-2 font-mono text-2xl font-semibold text-navy">{value}</p>
+      ) : (
+        children
+      )}
+    </div>
+  )
+}
+
 /* ============================== Overview ============================== */
 
 function Overview({ products, sales, loading, error, onViewSales }) {
@@ -149,46 +175,38 @@ function Overview({ products, sales, loading, error, onViewSales }) {
   }
 
   if (error) {
-    return (
-      <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-        <p className="font-mono text-sm text-rust">{error}</p>
-      </div>
-    )
+    return <ErrorPanel message={error} />
   }
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Seller workspace</p>
-      <h1 className="mt-1 mb-8 text-3xl text-navy font-display">Overview</h1>
+      <SectionHeader eyebrow="Seller workspace" title="Overview" />
 
       {products.length === 0 ? (
-        <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-          <p className="text-lg text-navy font-display">No listings yet</p>
-          <p className="mt-2 text-sm text-navy/60">
-            Add your first product and start selling — your stats will show up here.
-          </p>
-          <Link
-            to="/create-Product"
-            className="mt-5 inline-block rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
-          >
-            Add your first product
-          </Link>
-        </div>
+        <EmptyState
+          title="No listings yet"
+          body="Add your first product and start selling — your stats will show up here."
+          action={
+            <Link to="/create-Product" className={buttonVariants({ variant: "primary", size: "md" })}>
+              Add your first product
+            </Link>
+          }
+        />
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-3">
-            <StatCard label="Listings" value={stats.listings} />
-            <StatCard label="Sales" value={stats.sales} />
-            <StatCard label="Revenue" value={`$${stats.revenue.toFixed(2)}`} />
+            <StatCard label="Listings" value={String(stats.listings)} />
+            <StatCard label="Sales" value={String(stats.sales)} />
+            <StatCard label="Revenue">
+              <Price value={stats.revenue} className="font-mono text-2xl font-semibold text-navy" />
+            </StatCard>
           </div>
 
           <PerformanceSection sales={sales} />
 
           <div className="mt-8">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
-                Recent sales
-              </h2>
+              <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">Recent sales</h2>
               <button
                 type="button"
                 onClick={onViewSales}
@@ -205,24 +223,12 @@ function Overview({ products, sales, loading, error, onViewSales }) {
   )
 }
 
-function StatCard({ label, value }) {
-  return (
-    <div className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-navy/50">{label}</p>
-      <p className="mt-2 font-mono text-2xl font-semibold text-navy">{value}</p>
-    </div>
-  )
-}
-
 /* ============================== Performance (Overview) ============================== */
 
 function localDateKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 }
 
-// Bucket the seller's sales by calendar day and build a contiguous 30-day
-// series (today back 29 days), with zero-revenue days shown as 0 instead of
-// being skipped. Each sale's amount is price (unit snapshot) * quantity.
 function buildDaySeries(sales, days = 30) {
   const amounts = new Map()
   for (const sale of sales) {
@@ -249,14 +255,10 @@ function buildDaySeries(sales, days = 30) {
 
 function EmptyPerformance() {
   return (
-    <div className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
+    <div className="mt-8 rounded-lg border border-navy/10 bg-white p-5 shadow-card">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
-          Performance
-        </h2>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">
-          Last 30 days
-        </span>
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">Performance</h2>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">Last 30 days</span>
       </div>
       <p className="py-10 text-center font-mono text-sm text-navy/50">
         No sales in the last 30 days yet
@@ -277,14 +279,10 @@ function PerformanceSection({ sales }) {
   }
 
   return (
-    <div className="mt-8 rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
+    <div className="mt-8 rounded-lg border border-navy/10 bg-white p-5 shadow-card">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
-          Performance
-        </h2>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">
-          Last 30 days
-        </span>
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">Performance</h2>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-navy/40">Last 30 days</span>
       </div>
 
       <div className="h-56 w-full">
@@ -292,21 +290,21 @@ function PerformanceSection({ sales }) {
           <AreaChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
             <defs>
               <linearGradient id="sellerRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#E85D4E" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#E85D4E" stopOpacity={0} />
+                <stop offset="0%" stopColor="#D97706" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#D97706" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#1C1B191A" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 10, fill: "#A03A2E", fontFamily: "IBM Plex Mono, monospace" }}
+              tick={{ fontSize: 10, fill: "#B45309", fontFamily: "JetBrains Mono, monospace" }}
               tickLine={false}
               axisLine={{ stroke: "#1C1B1933" }}
               interval="preserveStartEnd"
               minTickGap={24}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: "#A03A2E", fontFamily: "IBM Plex Mono, monospace" }}
+              tick={{ fontSize: 10, fill: "#B45309", fontFamily: "JetBrains Mono, monospace" }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `$${v}`}
@@ -314,25 +312,25 @@ function PerformanceSection({ sales }) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#FBF7F0",
+                backgroundColor: "#F7F3EC",
                 border: "1px solid #1C1B1926",
                 borderRadius: 6,
-                fontFamily: "IBM Plex Mono, monospace",
+                fontFamily: "JetBrains Mono, monospace",
                 fontSize: 12,
                 color: "#1C1B19",
               }}
-              labelStyle={{ color: "#A03A2E", textTransform: "uppercase", fontSize: 10 }}
+              labelStyle={{ color: "#B45309", textTransform: "uppercase", fontSize: 10 }}
               formatter={(value) => [`$${Number(value).toFixed(2)}`, "Revenue"]}
               labelFormatter={(label, payload) => (payload?.[0]?.payload?.key ? `  ·  ${payload[0].payload.key}` : label)}
             />
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#E85D4E"
+              stroke="#D97706"
               strokeWidth={2}
               fill="url(#sellerRevenue)"
               dot={false}
-              activeDot={{ r: 4, fill: "#E85D4E", stroke: "#FBF7F0", strokeWidth: 2 }}
+              activeDot={{ r: 4, fill: "#D97706", stroke: "#F7F3EC", strokeWidth: 2 }}
               isAnimationActive
             />
           </AreaChart>
@@ -347,16 +345,15 @@ function PerformanceSection({ sales }) {
 function ListingsSection() {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Seller workspace</p>
-      <div className="mb-8 flex items-center justify-between gap-4">
-        <h1 className="text-3xl text-navy font-display">My listings</h1>
-        <Link
-          to="/create-Product"
-          className="rounded-sm bg-ochre px-4 py-2 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream"
-        >
-          + New product
-        </Link>
-      </div>
+      <SectionHeader
+        eyebrow="Seller workspace"
+        title="My listings"
+        action={
+          <Link to="/create-Product" className={buttonVariants({ variant: "primary", size: "md" })}>
+            + New product
+          </Link>
+        }
+      />
       <UserDashboardProducts />
     </div>
   )
@@ -367,33 +364,24 @@ function ListingsSection() {
 function SalesSection({ sales, loading, error }) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Seller workspace</p>
-      <h1 className="mt-1 mb-8 text-3xl text-navy font-display">Sales</h1>
+      <SectionHeader eyebrow="Seller workspace" title="Sales" />
 
-      {loading && (
-        <p className="font-mono text-sm text-navy/50">Loading sales...</p>
-      )}
+      {loading && <p className="font-mono text-sm text-navy/50">Loading sales...</p>}
 
-      {!loading && error && (
-        <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-          <p className="font-mono text-sm text-rust">{error}</p>
-        </div>
-      )}
+      {!loading && error && <ErrorPanel message={error} />}
 
       {!loading && !error && sales.length === 0 && (
-        <div className="rounded-md bg-paper p-10 text-center outline outline-1 -outline-offset-1 outline-navy/15">
-          <p className="font-mono text-sm text-navy/60">
-            No sales yet — when customers order your products they&apos;ll appear here.
-          </p>
-        </div>
+        <EmptyState
+          title="No sales yet"
+          body="When customers order your products they'll appear here."
+          className="mx-0 max-w-none"
+        />
       )}
 
       {!loading && !error && sales.length > 0 && (
-        <div className="rounded-md bg-paper p-5 outline outline-1 -outline-offset-1 outline-navy/15">
+        <div className="rounded-lg border border-navy/10 bg-white p-5 shadow-card">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">
-              Recent activity
-            </h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-widest text-navy/60">Recent activity</h2>
             <span className="font-mono text-xs text-navy/50">{sales.length} total</span>
           </div>
           <SaleList sales={sales} />
@@ -407,7 +395,7 @@ function SaleList({ sales }) {
   return (
     <ul className="flex flex-col divide-y divide-navy/10">
       {sales.map((sale) => {
-        const status = sale.Order?.status || "pending"
+        const statusMeta = orderStatusMeta(sale.Order?.status || "pending")
         return (
           <li key={sale.id} className="flex items-center gap-4 py-3">
             <div className="min-w-0 flex-1">
@@ -418,14 +406,11 @@ function SaleList({ sales }) {
                 Qty {sale.quantity} · {new Date(sale.createdAt).toLocaleDateString()}
               </p>
             </div>
-            <span className="font-mono text-sm font-semibold text-ochre-ink">
-              ${(Number(sale.price || 0) * Number(sale.quantity || 0)).toFixed(2)}
-            </span>
-            <span
-              className={`rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest ${STATUS_STYLES[status] || STATUS_STYLES.pending}`}
-            >
-              {status}
-            </span>
+            <Price
+              value={Number(sale.price || 0) * Number(sale.quantity || 0)}
+              className="font-mono text-sm font-semibold text-ochre-ink"
+            />
+            <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
           </li>
         )
       })}

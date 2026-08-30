@@ -45,6 +45,8 @@ export const fetchCart = () => request("/cart", { auth: true })
 export const addToCart = (productId, quantity = 1) =>
   request("/product/add-to-cart", { method: "POST", body: { productId, quantity }, auth: true })
 export const removeFromCart = (cartItemId) => request(`/cart/${cartItemId}`, { method: "DELETE", auth: true })
+export const updateCartItem = (cartItemId, quantity) =>
+  request(`/cart/${cartItemId}`, { method: "PATCH", body: { quantity }, auth: true })
 
 // ---- orders ----
 export const fetchOrders = () => request("/orders", { auth: true })

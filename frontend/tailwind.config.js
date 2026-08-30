@@ -4,14 +4,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: "#1C1B19",
-        cream: "#FBF7F0",
-        paper: "#F2EEE4",
-        ochre: "#E85D4E",
-        "ochre-ink": "#A03A2E",
-        rust: "#B33F2E",
-        moss: "#4F6F52",
-        teal: "#1B7F79",
+        // Warm Dipti&Suppliers brand foundation (modernised, not pale/beige).
+        // Keep these token names — existing utility classes (bg-navy, text-ochre…)
+        // pick them up automatically.
+        navy: "#1C1B19", // warm near-black ink / dark surfaces
+        cream: "#FFFFFF", // clean white surfaces & page background
+        paper: "#F7F3EC", // warm off-white secondary surface / cards
+        ochre: "#D97706", // signature terracotta/amber accent (CTA, highlights)
+        "ochre-ink": "#B45309", // readable dark-ochre text on light bg
+        rust: "#C2410C", // destructive / negative
+        moss: "#3F6212", // positive / in stock
+        teal: "#0F766E", // low-stock alert
         category: {
           laptop: "#3D7CA6",
           desktop: "#A68A5B",
@@ -23,8 +26,16 @@ export default {
         },
       },
       fontFamily: {
-        display: ["Fraunces", "serif"],
-        mono: ["IBM Plex Mono", "monospace"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Fraunces", "ui-serif", "serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+      },
+      boxShadow: {
+        card: "0 1px 2px rgba(28,27,25,0.05), 0 1px 3px rgba(28,27,25,0.06)",
+        lift: "0 14px 34px -14px rgba(28,27,25,0.28)",
+      },
+      borderRadius: {
+        xl: "0.85rem",
       },
     },
   },
