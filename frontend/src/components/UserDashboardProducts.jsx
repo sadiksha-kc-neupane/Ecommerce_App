@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { fetchProducts, deleteProduct as deleteProductApi } from "../lib/api.js"
 import { getCurrentUser } from "../lib/auth.js"
+import { isLowStock } from "../lib/stock.js"
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/categories.js"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -61,9 +63,9 @@ useEffect(() => {
             key={products.id}
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300"
           >
-            {products.productImage ? (
+            {products.productImages?.[0] ? (
               <img
-                src={products.productImage}
+                src={products.productImages?.[0]}
                 alt={products.productName}
                 className="h-48 w-full rounded-lg object-cover"
               />
@@ -83,6 +85,19 @@ useEffect(() => {
                 {products.productName}
               </h2>
 
+              <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-gray-600">
+                <span
+                  className="inline-block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: CATEGORY_COLORS[products.category] || "#1C1B19" }}
+                />
+                {CATEGORY_LABELS[products.category] || products.category}
+                {products.subcategory && (
+                  <span className="rounded-full bg-gray-200 px-2 py-0.5 font-mono text-[10px] normal-case tracking-normal text-gray-600">
+                    {products.subcategory}
+                  </span>
+                )}
+              </p>
+
               <p className="text-lg text-green-600 font-bold">
                 ${products.price}
               </p>
@@ -92,6 +107,11 @@ useEffect(() => {
                  <p className="text-lg text-green-600 font-bold">
                 Stock: {products.stock}
               </p>
+              {isLowStock(products.stock) && (
+                <span className="inline-block w-fit rounded-full bg-teal px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-white">
+                  Low stock — restock soon
+                </span>
+              )}
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>

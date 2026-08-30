@@ -9,7 +9,7 @@ import Footer from "../components/Footer.jsx"
 import { fetchProducts, addToCart } from "../lib/api.js"
 import { useCart } from "../context/CartContext.jsx"
 import { toast } from "sonner"
-import Pricing from "./pricing.jsx"
+import WhyUs from "./WhyUs.jsx"
 
 export default function Home() {
   const { refreshCart } = useCart()
@@ -83,7 +83,7 @@ export default function Home() {
         <TrustBadges />
       </div>
 
-      <Pricing/>
+      <WhyUs />
       <Footer />
     </div>
   )

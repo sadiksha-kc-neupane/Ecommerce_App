@@ -4,18 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: "#14213D",
+        navy: "#1C1B19",
         cream: "#FBF7F0",
         paper: "#F2EEE4",
-        ochre: "#E8A33D",
-        "ochre-ink": "#9A6210",
+        ochre: "#E85D4E",
+        "ochre-ink": "#A03A2E",
         rust: "#B33F2E",
         moss: "#4F6F52",
+        teal: "#1B7F79",
         category: {
-          electronics: "#3B6EA5",
-          materials: "#8C7853",
-          agriculture: "#4F6F52",
-          cosmetics: "#C77DA0",
+          laptop: "#3D7CA6",
+          desktop: "#A68A5B",
+          components: "#A75A7E",
+          cctv: "#546166",
+          "printer_scanner": "#B07A3C",
+          networking: "#5751A0",
+          smartboard: "#8A63B8",
         },
       },
       fontFamily: {

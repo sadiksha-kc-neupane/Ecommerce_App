@@ -4,24 +4,24 @@
 /* shadcn/ui design tokens, mapped onto the existing navy/cream/ochre palette */
 :root {
   --background: #fbf7f0;
-  --foreground: #14213d;
+  --foreground: #1c1b19;
   --card: #fbf7f0;
-  --card-foreground: #14213d;
+  --card-foreground: #1c1b19;
   --popover: #fbf7f0;
-  --popover-foreground: #14213d;
+  --popover-foreground: #1c1b19;
   --primary: #cd1919;
-  --primary-foreground: #14213d;
+  --primary-foreground: #1c1b19;
   --secondary: #f2eee4;
-  --secondary-foreground: #14213d;
+  --secondary-foreground: #1c1b19;
   --muted: #f2eee4;
-  --muted-foreground: color-mix(in srgb, #14213d 60%, transparent);
+  --muted-foreground: color-mix(in srgb, #1c1b19 60%, transparent);
   --accent: #f2eee4;
-  --accent-foreground: #14213d;
+  --accent-foreground: #1c1b19;
   --destructive: #b33f2e;
   --destructive-foreground: #fbf7f0;
-  --border: color-mix(in srgb, #14213d 15%, transparent);
-  --input: color-mix(in srgb, #14213d 15%, transparent);
-  --ring: #e8a33d;
+  --border: color-mix(in srgb, #1c1b19 15%, transparent);
+  --input: color-mix(in srgb, #1c1b19 15%, transparent);
+  --ring: #e85d4e;
   --radius: 0.375rem;
 }
 
@@ -102,7 +102,7 @@
 /* Slim styled scrollbar for the horizontal featured strip */
 .scroll-slim {
   scrollbar-width: thin;
-  scrollbar-color: rgba(20, 33, 61, 0.35) transparent;
+  scrollbar-color: rgba(28, 27, 25, 0.35) transparent;
 }
 .scroll-slim::-webkit-scrollbar {
   height: 6px;
@@ -111,9 +111,28 @@
   background: transparent;
 }
 .scroll-slim::-webkit-scrollbar-thumb {
-  background: rgba(20, 33, 61, 0.25);
+  background: rgba(28, 27, 25, 0.25);
   border-radius: 9999px;
 }
 .scroll-slim::-webkit-scrollbar-thumb:hover {
-  background: #e8a33d;
+  background: #e85d4e;
+}
+
+/* Base styles: font rendering + smooth scrolling + a consistent focus-visible
+   indicator app-wide. box-sizing is NOT redeclared — Tailwind preflight already
+   sets `box-sizing: border-box` on all elements. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme("colors.ochre");
+    outline-offset: 2px;
+  }
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { CATEGORY_COLORS } from "../lib/categories.js"
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/categories.js"
+import { isLowStock } from "../lib/stock.js"
 import { useStaggerVariants } from "../lib/motion.js"
 
 // "Featured" = first products returned by the existing fetch (most recent
@@ -43,19 +44,20 @@ export default function FeaturedRow({ products, onAddToCart }) {
         {featured.map((product) => {
           const outOfStock =
             Number(product.stock) <= 0 || product.status === "out_of_stock"
-          const dotColor = CATEGORY_COLORS[product.category] || "#14213D"
+          const lowStock = !outOfStock && isLowStock(product.stock)
+          const dotColor = CATEGORY_COLORS[product.category] || "#1C1B19"
 
           return (
             <motion.article
               key={product.id}
               variants={stagger.item}
-              className="group w-64 flex-shrink-0 snap-start overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(20,33,61,0.35)] hover:outline-ochre sm:w-72"
+              className="group w-64 flex-shrink-0 snap-start overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(28,27,25,0.35)] hover:outline-ochre sm:w-72"
             >
               <Link to={`/product/${product.id}`} className="block">
                 <div className="relative h-48 overflow-hidden bg-paper">
-                  {product.productImage ? (
+                  {product.productImages?.[0] ? (
                     <img
-                      src={product.productImage}
+                      src={product.productImages?.[0]}
                       alt={product.productName}
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -85,7 +87,7 @@ export default function FeaturedRow({ products, onAddToCart }) {
                     className="inline-block h-2 w-2 rounded-full"
                     style={{ backgroundColor: dotColor }}
                   />
-                  {product.category}
+                  {CATEGORY_LABELS[product.category] || product.category}
                 </p>
                 <Link to={`/product/${product.id}`}>
                   <h3
@@ -95,13 +97,21 @@ export default function FeaturedRow({ products, onAddToCart }) {
                   </h3>
                 </Link>
 
-                <div className="mt-2 flex items-center justify-between">
+                <div className="mt-2 flex items-center justify-between gap-2">
                   <span
-                    className={`font-mono text-[9px] uppercase tracking-widest ${
-                      outOfStock ? "text-rust" : "text-moss"
+                    className={`rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest ${
+                      outOfStock
+                        ? "text-rust"
+                        : lowStock
+                          ? "bg-teal text-cream"
+                          : "text-moss"
                     }`}
                   >
-                    {outOfStock ? "Out of stock" : `${Number(product.stock)} in stock`}
+                    {outOfStock
+                      ? "Out of stock"
+                      : lowStock
+                        ? `Only ${product.stock} left`
+                        : `${Number(product.stock)} in stock`}
                   </span>
                   {onAddToCart && (
                     <button

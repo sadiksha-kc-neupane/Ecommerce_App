@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 
 function About() {
@@ -13,35 +13,40 @@ function About() {
         <h1
           className="mb-8 text-4xl font-semibold text-navy font-display"
         >
-          Bazario — everything on one shelf
+          Dipti&Suppliers — IT hardware, done right
         </h1>
 
         <div className="flex flex-col gap-6 text-slate-700 leading-relaxed">
           <p>
-            Bazario started as a single market stall with a simple idea: a good
-            store shouldn't make you choose between categories. One aisle for
-            electronics, another for building materials, a corner for farm
-            supplies, and a small counter for cosmetics.
+            Dipti&Suppliers supplies the hardware businesses and homes
+            actually run on — laptops and desktops for daily work, servers
+            and networking gear to keep it all connected, smartboards for
+            classrooms and meeting rooms, and CCTV systems to keep it all
+            secure.
           </p>
           <p>
-            Today we bring that same general-catalog spirit online. From
-            headphones and wiring to seeds, fertilizers, paints, and skincare —
-            every product is listed the way we'd tag it on a shelf: honest
-            price, clear quantity, no fuss.
+            We built our catalog the way an IT department shops: real specs,
+            real stock counts, and no guesswork. Every listing shows exactly
+            what's in the box and what's left on the shelf — whether that's
+            a single graphics card or a batch of routers for a full office
+            rollout.
           </p>
           <p>
-            We keep our inventory lean and our tags accurate. When something is
-            in stock, it's in stock. When it sells out, the shelf label comes
-            down. That's the Bazario way.
+            From single laptops to full CCTV and networking installs, our
+            team sources, stocks, and ships the equipment you need — with
+            support you can actually reach when something needs a second
+            opinion.
           </p>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {[
-            { title: "Electronics", note: "Gadgets, audio & accessories" },
-            { title: "Materials", note: "Hardware, paint & building" },
-            { title: "Agriculture", note: "Seeds, tools & farm inputs" },
-            { title: "Cosmetics", note: "Skincare & personal care" },
+            { title: "Laptops", note: "Business, gaming & ultrabooks" },
+            { title: "Desktops & Server", note: "All-in-ones, towers & servers" },
+            { title: "Components", note: "RAM, storage, GPUs & more" },
+            { title: "CCTV & Accessories", note: "Cameras, DVR/NVR & cabling" },
+            { title: "Printer & Scanner", note: "Inkjet, laser & scanners" },
+            { title: "Networking", note: "Routers, switches & access points" },
           ].map((cat) => (
             <div
               key={cat.title}
@@ -56,7 +61,7 @@ function About() {
         </div>
 
         <div className="mt-10 rounded-lg border border-navy/15 bg-white p-5 font-mono text-xs uppercase tracking-widest text-slate-500">
-          Shelf-tag inventory · Fair prices · Restocked weekly
+          Real stock counts · Fair prices · Restocked weekly · +977-9804045706
         </div>
       </main>
 

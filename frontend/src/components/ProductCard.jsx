@@ -1,21 +1,23 @@
 import { motion, useReducedMotion } from "framer-motion"
-import { CATEGORY_COLORS } from "../lib/categories.js"
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/categories.js"
+import { isLowStock } from "../lib/stock.js"
 
 export default function ProductCard({ product, onAddToCart }) {
   const reduceMotion = useReducedMotion()
   const outOfStock = Number(product.stock) <= 0 || product.status === "out_of_stock"
-  const dotColor = CATEGORY_COLORS[product.category] || "#14213D"
+  const lowStock = !outOfStock && isLowStock(product.stock)
+  const dotColor = CATEGORY_COLORS[product.category] || "#1C1B19"
 
   return (
     <motion.div
       whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      className="group flex flex-col overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition-[box-shadow,outline-color] duration-300 hover:shadow-[0_16px_36px_-16px_rgba(20,33,61,0.35)] hover:outline-ochre will-change-transform"
+      className="group flex flex-col overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15 transition-[box-shadow,outline-color] duration-300 hover:shadow-[0_16px_36px_-16px_rgba(28,27,25,0.35)] hover:outline-ochre will-change-transform"
     >
       <a href={`/product/${product.id}`} className="block overflow-hidden bg-paper">
-        {product.productImage ? (
+        {product.productImages?.[0] ? (
           <img
-            src={product.productImage}
+            src={product.productImages?.[0]}
             alt={product.productName}
             className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-44"
             loading="lazy"
@@ -40,7 +42,7 @@ export default function ProductCard({ product, onAddToCart }) {
             className="inline-block h-2 w-2 rounded-full"
             style={{ backgroundColor: dotColor }}
           />
-          {product.category}
+          {CATEGORY_LABELS[product.category] || product.category}
         </div>
 
         <h3
@@ -48,6 +50,12 @@ export default function ProductCard({ product, onAddToCart }) {
         >
           {product.productName}
         </h3>
+
+        {lowStock && (
+          <span className="mt-1 w-fit rounded-full bg-teal px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-cream">
+            Only {product.stock} left
+          </span>
+        )}
 
         <div className="mt-auto flex items-end justify-between pt-2">
           <span className="border border-dashed border-navy/25 px-1.5 py-0.5 font-mono text-sm font-semibold text-rust">

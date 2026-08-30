@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
+import { motion, useReducedMotion } from "framer-motion"
 import { toast } from "sonner"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
-import { CATEGORY_COLORS } from "../lib/categories.js"
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "../lib/categories.js"
+import { isLowStock } from "../lib/stock.js"
 import { fetchSingleProduct, addToCart } from "../lib/api.js"
 import { useCart } from "../context/CartContext.jsx"
 
@@ -15,6 +17,8 @@ export default function Product() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [quantity, setQuantity] = useState(1)
+  const [activeImg, setActiveImg] = useState(0)
+  const reduceMotion = useReducedMotion()
 
   useEffect(() => {
     let cancelled = false
@@ -27,6 +31,7 @@ export default function Product() {
         const data = Array.isArray(res) ? res[0] : res?.data ?? res
         setError(data ? null : "Product not found")
         setProduct(data || null)
+        setActiveImg(0)
       } catch (err) {
         if (cancelled) return
         setError(err.message)
@@ -63,7 +68,11 @@ export default function Product() {
 
   const stock = Number(product?.stock) || 0
   const outOfStock = stock <= 0 || product?.status === "out_of_stock"
-  const dotColor = CATEGORY_COLORS[product?.category] || "#14213D"
+  const lowStock = !outOfStock && isLowStock(product?.stock)
+  const dotColor = CATEGORY_COLORS[product?.category] || "#1C1B19"
+  const images = Array.isArray(product?.productImages)
+    ? product.productImages.filter(Boolean)
+    : []
 
   return (
     <div className="min-h-screen bg-paper">
@@ -95,12 +104,56 @@ export default function Product() {
 
         {!loading && product && (
           <div className="mt-6 grid gap-8 md:grid-cols-2">
-            <div className="overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15">
-              <img
-                src={product.productImage || "https://placehold.co/600x600/F2EEE4/14213D?text=Bazario"}
-                alt={product.productName}
-                className="h-full max-h-[480px] w-full object-cover"
-              />
+            <div className="flex flex-col gap-3">
+              <div className="aspect-square overflow-hidden rounded-md bg-cream outline outline-1 -outline-offset-1 outline-navy/15">
+                {images.length > 0 ? (
+                  <motion.img
+                    key={activeImg}
+                    initial={reduceMotion ? false : { opacity: 0.35 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                    src={images[activeImg]}
+                    alt={product.productName}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-[repeating-linear-gradient(45deg,#F2EEE4_0px,#F2EEE4_12px,#EDE7DA_12px,#EDE7DA_24px)]">
+                    <span
+                      className="text-6xl text-navy/25 font-display"
+                    >
+                      {product.productName?.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-navy/35">
+                      No photo yet
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {images.length > 1 && (
+                <div className="flex flex-wrap gap-2">
+                  {images.map((src, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setActiveImg(i)}
+                      aria-label={`View image ${i + 1}`}
+                      aria-pressed={i === activeImg}
+                      className={`h-16 w-16 overflow-hidden rounded-md outline outline-1 -outline-offset-1 transition ${
+                        i === activeImg
+                          ? "-outline-offset-2 outline-2 outline-ochre"
+                          : "outline-navy/15 hover:outline-ochre/60"
+                      }`}
+                    >
+                      <img
+                        src={src}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col">
@@ -109,15 +162,26 @@ export default function Product() {
                   className="inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: dotColor }}
                 />
-                {product.category}
+                {CATEGORY_LABELS[product.category] || product.category}
+                {product.subcategory && (
+                  <span className="ml-1 rounded-full bg-paper px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-navy/60">
+                    {product.subcategory}
+                  </span>
+                )}
                 <span
                   className={`ml-2 rounded-full px-2 py-0.5 ${
                     outOfStock
                       ? "bg-rust/10 text-rust"
-                      : "bg-moss/10 text-moss"
+                      : lowStock
+                        ? "bg-teal text-cream"
+                        : "bg-moss/10 text-moss"
                   }`}
                 >
-                  {outOfStock ? "Out of stock" : `${stock} in stock`}
+                  {outOfStock
+                    ? "Out of stock"
+                    : lowStock
+                      ? `Only ${stock} left`
+                      : `${stock} in stock`}
                 </span>
               </div>
 

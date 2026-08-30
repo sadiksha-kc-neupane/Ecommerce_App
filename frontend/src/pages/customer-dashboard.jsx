@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import AccountDetailsSection from "../components/AccountDetailsSection.jsx"
+import DashboardSidebar from "../components/DashboardSidebar.jsx"
 import { useCart } from "../context/CartContext.jsx"
 import { getCurrentUser } from "../lib/auth.js"
 import { fetchOrders, fetchCart, fetchSingleUser, cancelOrder as cancelOrderApi, removeFromCart } from "../lib/api.js"
@@ -27,17 +28,6 @@ const NAV_ITEMS = [
   { key: "cart", label: "Cart" },
   { key: "account", label: "Account details" },
 ]
-
-function initials(name) {
-  if (!name) return "?"
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase()
-}
 
 export default function CustomerDashboard() {
   const navigate = useNavigate()
@@ -144,49 +134,16 @@ export default function CustomerDashboard() {
       {!isLoggedIn && <Navigate to="/signin" replace />}
 
       {isLoggedIn && (
-        <main className="mx-auto flex max-w-6xl gap-8 px-6 py-10">
+        <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10 lg:flex-row">
           {/* ---------- Sidebar ---------- */}
-          <aside className="flex w-60 flex-col rounded-md bg-navy p-4 text-cream lg:sticky lg:top-24">
-            <div className="mb-6 flex items-center gap-3 rounded-md bg-cream/5 p-3">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-ochre bg-cream/10 font-mono text-sm font-semibold text-ochre">
-                {initials(profile?.username)}
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-sm capitalize text-cream">{profile?.username || "Customer"}</p>
-                <span className="mt-0.5 inline-block rounded-full bg-ochre/15 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ochre">
-                  Customer
-                </span>
-              </div>
-            </div>
-
-            <nav className="flex flex-col gap-1">
-              {NAV_ITEMS.map((item) => {
-                const active = activeSection === item.key
-                return (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setActiveSection(item.key)}
-                    className={`relative border-l-2 px-3 py-2 text-left font-mono text-[11px] uppercase tracking-widest transition ${
-                      active
-                        ? "border-ochre bg-ochre/15 text-cream"
-                        : "border-transparent text-cream/60 hover:bg-cream/5 hover:text-cream"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                )
-              })}
-            </nav>
-
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="mt-auto rounded-sm border border-rust/40 px-3 py-2 text-left font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:bg-rust hover:text-cream"
-            >
-              Log out
-            </button>
-          </aside>
+          <DashboardSidebar
+            navItems={NAV_ITEMS}
+            activeKey={activeSection}
+            onSelect={setActiveSection}
+            username={profile?.username}
+            roleLabel="Customer"
+            onLogout={handleLogout}
+          />
 
           {/* ---------- Content ---------- */}
           <section className="min-w-0 flex-1">
@@ -375,7 +332,7 @@ function OrderList({ orders, cancellingId, onCancel, compact }) {
                 className="flex flex-wrap items-center justify-between gap-2 border-b border-navy/10 pb-2 last:border-b-0"
               >
                 <img
-                  src={item.Product?.productImage || "https://placehold.co/48x48/F2EEE4/14213D?text=Bazario"}
+                  src={item.Product?.productImages?.[0] || "https://placehold.co/48x48/F2EEE4/1C1B19?text=D&S"}
                   alt={item.Product?.productName}
                   className="h-10 w-10 rounded-md object-cover"
                 />
@@ -439,34 +396,38 @@ function CartSection({ items, loading, error, removingId, onRemove }) {
               return (
                 <li
                   key={item.id}
-                  className="flex items-center gap-4 rounded-md bg-paper p-4 outline outline-1 -outline-offset-1 outline-navy/15"
+                  className="rounded-md bg-paper p-4 outline outline-1 -outline-offset-1 outline-navy/15"
                 >
-                  <img
-                    src={product?.productImage || "https://placehold.co/96x96/F2EEE4/14213D?text=Bazario"}
-                    alt={product?.productName}
-                    className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
-                  />
+                  <div className="flex items-start gap-4">
+                    <img
+                      src={product?.productImages?.[0] || "https://placehold.co/96x96/F2EEE4/1C1B19?text=D&S"}
+                      alt={product?.productName}
+                      className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                    />
 
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-lg text-navy font-display">
-                      {product?.productName}
-                    </p>
-                    <p className="mt-1 font-mono text-xs text-navy/60">
-                      ${Number(product?.price).toFixed(2)} each · Qty: {item.quantity}
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-lg text-navy font-display">
+                        {product?.productName}
+                      </p>
+                      <p className="mt-1 font-mono text-xs text-navy/60">
+                        ${Number(product?.price).toFixed(2)} each · Qty: {item.quantity}
+                      </p>
+                    </div>
+
+                    <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
+                      ${lineTotal.toFixed(2)}
                     </p>
                   </div>
 
-                  <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
-                    ${lineTotal.toFixed(2)}
-                  </p>
-
-                  <button
-                    onClick={() => onRemove(item.id)}
-                    disabled={removingId === item.id}
-                    className="flex-shrink-0 rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
-                  >
-                    {removingId === item.id ? "Removing..." : "Remove"}
-                  </button>
+                  <div className="mt-3 flex justify-end">
+                    <button
+                      onClick={() => onRemove(item.id)}
+                      disabled={removingId === item.id}
+                      className="flex-shrink-0 rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
+                    >
+                      {removingId === item.id ? "Removing..." : "Remove"}
+                    </button>
+                  </div>
                 </li>
               )
             })}

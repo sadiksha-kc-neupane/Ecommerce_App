@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
 import AccountDetailsSection from "../components/AccountDetailsSection.jsx"
 import UserDashboardProducts from "../components/UserDashboardProducts.jsx"
+import DashboardSidebar from "../components/DashboardSidebar.jsx"
 import { getCurrentUser } from "../lib/auth.js"
 import { fetchProducts, fetchSellerOrders, fetchSingleUser } from "../lib/api.js"
 
@@ -28,17 +29,6 @@ const NAV_ITEMS = [
   { key: "sales", label: "Sales" },
   { key: "account", label: "Account details" },
 ]
-
-function initials(name) {
-  if (!name) return "?"
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase()
-}
 
 export default function SellerDashboard() {
   const navigate = useNavigate()
@@ -107,49 +97,16 @@ export default function SellerDashboard() {
       {!isLoggedIn && <Navigate to="/signin" replace />}
 
       {isLoggedIn && (
-        <main className="mx-auto flex max-w-6xl gap-8 px-6 py-10">
+        <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10 lg:flex-row">
           {/* ---------- Sidebar ---------- */}
-          <aside className="flex w-60 flex-col rounded-md bg-navy p-4 text-cream lg:sticky lg:top-24">
-            <div className="mb-6 flex items-center gap-3 rounded-md bg-cream/5 p-3">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-ochre bg-cream/10 font-mono text-sm font-semibold text-ochre">
-                {initials(profile?.username)}
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-sm capitalize text-cream">{profile?.username || "Seller"}</p>
-                <span className="mt-0.5 inline-block rounded-full bg-ochre/15 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ochre">
-                  Seller
-                </span>
-              </div>
-            </div>
-
-            <nav className="flex flex-col gap-1">
-              {NAV_ITEMS.map((item) => {
-                const active = activeSection === item.key
-                return (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setActiveSection(item.key)}
-                    className={`relative border-l-2 px-3 py-2 text-left font-mono text-[11px] uppercase tracking-widest transition ${
-                      active
-                        ? "border-ochre bg-ochre/15 text-cream"
-                        : "border-transparent text-cream/60 hover:bg-cream/5 hover:text-cream"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                )
-              })}
-            </nav>
-
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="mt-auto rounded-sm border border-rust/40 px-3 py-2 text-left font-mono text-[11px] uppercase tracking-widest text-cream/70 transition hover:bg-rust hover:text-cream"
-            >
-              Log out
-            </button>
-          </aside>
+          <DashboardSidebar
+            navItems={NAV_ITEMS}
+            activeKey={activeSection}
+            onSelect={setActiveSection}
+            username={profile?.username}
+            roleLabel="Seller"
+            onLogout={handleLogout}
+          />
 
           {/* ---------- Content ---------- */}
           <section className="min-w-0 flex-1">
@@ -335,21 +292,21 @@ function PerformanceSection({ sales }) {
           <AreaChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
             <defs>
               <linearGradient id="sellerRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#E8A33D" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#E8A33D" stopOpacity={0} />
+                <stop offset="0%" stopColor="#E85D4E" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#E85D4E" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#14213D1A" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1C1B191A" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 10, fill: "#9A6210", fontFamily: "IBM Plex Mono, monospace" }}
+              tick={{ fontSize: 10, fill: "#A03A2E", fontFamily: "IBM Plex Mono, monospace" }}
               tickLine={false}
-              axisLine={{ stroke: "#14213D33" }}
+              axisLine={{ stroke: "#1C1B1933" }}
               interval="preserveStartEnd"
               minTickGap={24}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: "#9A6210", fontFamily: "IBM Plex Mono, monospace" }}
+              tick={{ fontSize: 10, fill: "#A03A2E", fontFamily: "IBM Plex Mono, monospace" }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `$${v}`}
@@ -358,24 +315,24 @@ function PerformanceSection({ sales }) {
             <Tooltip
               contentStyle={{
                 backgroundColor: "#FBF7F0",
-                border: "1px solid #14213D26",
+                border: "1px solid #1C1B1926",
                 borderRadius: 6,
                 fontFamily: "IBM Plex Mono, monospace",
                 fontSize: 12,
-                color: "#14213D",
+                color: "#1C1B19",
               }}
-              labelStyle={{ color: "#9A6210", textTransform: "uppercase", fontSize: 10 }}
+              labelStyle={{ color: "#A03A2E", textTransform: "uppercase", fontSize: 10 }}
               formatter={(value) => [`$${Number(value).toFixed(2)}`, "Revenue"]}
               labelFormatter={(label, payload) => (payload?.[0]?.payload?.key ? `  ·  ${payload[0].payload.key}` : label)}
             />
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#E8A33D"
+              stroke="#E85D4E"
               strokeWidth={2}
               fill="url(#sellerRevenue)"
               dot={false}
-              activeDot={{ r: 4, fill: "#E8A33D", stroke: "#FBF7F0", strokeWidth: 2 }}
+              activeDot={{ r: 4, fill: "#E85D4E", stroke: "#FBF7F0", strokeWidth: 2 }}
               isAnimationActive
             />
           </AreaChart>

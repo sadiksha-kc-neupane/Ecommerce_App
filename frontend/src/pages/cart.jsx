@@ -104,37 +104,41 @@ export default function Cart() {
                 return (
                   <li
                     key={item.id}
-                    className="flex items-center gap-4 rounded-md bg-cream p-4 outline outline-1 -outline-offset-1 outline-navy/15"
+                    className="rounded-md bg-cream p-4 outline outline-1 -outline-offset-1 outline-navy/15"
                   >
-                    <img
-                      src={product?.productImage || "https://placehold.co/96x96/F2EEE4/14213D?text=Bazario"}
-                      alt={product?.productName}
-                      className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
-                    />
+                    <div className="flex items-start gap-4">
+                      <img
+                        src={product?.productImages?.[0] || "https://placehold.co/96x96/F2EEE4/1C1B19?text=D&S"}
+                        alt={product?.productName}
+                        className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                      />
 
-                    <div className="min-w-0 flex-1">
-                      <p
-                        className="truncate text-lg text-navy font-display"
-                      >
-                        {product?.productName}
-                      </p>
-                      <p className="mt-1 font-mono text-xs text-navy/60">
-                        ${Number(product?.price).toFixed(2)} each · Qty:{" "}
-                        {item.quantity}
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="truncate text-lg text-navy font-display"
+                        >
+                          {product?.productName}
+                        </p>
+                        <p className="mt-1 font-mono text-xs text-navy/60">
+                          ${Number(product?.price).toFixed(2)} each · Qty:{" "}
+                          {item.quantity}
+                        </p>
+                      </div>
+
+                      <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
+                        ${lineTotal.toFixed(2)}
                       </p>
                     </div>
 
-                    <p className="flex-shrink-0 font-mono text-sm font-semibold text-ochre-ink">
-                      ${lineTotal.toFixed(2)}
-                    </p>
-
-                    <button
-                      onClick={() => handleRemove(item.id)}
-                      disabled={removingId === item.id}
-                      className="flex-shrink-0 rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
-                    >
-                      {removingId === item.id ? "Removing..." : "Remove"}
-                    </button>
+                    <div className="mt-3 flex justify-end">
+                      <button
+                        onClick={() => handleRemove(item.id)}
+                        disabled={removingId === item.id}
+                        className="flex-shrink-0 rounded-sm border border-rust/40 px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream disabled:opacity-50"
+                      >
+                        {removingId === item.id ? "Removing..." : "Remove"}
+                      </button>
+                    </div>
                   </li>
                 )
               })}

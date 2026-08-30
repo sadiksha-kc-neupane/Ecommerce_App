@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 
 function Contact() {
@@ -27,7 +27,7 @@ function Contact() {
         <h1
           className="mb-8 text-4xl font-semibold text-navy font-display"
         >
-          Talk to Bazario
+          Talk to Dipti&Suppliers
         </h1>
 
         {sent ? (

@@ -129,18 +129,18 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col justify-center bg-navy px-6 py-12 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center bg-paper px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-ochre font-mono text-[10px] text-ochre">
-          Logo
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-ochre font-mono text-[10px] text-ochre-ink">
+          D&S
         </span>
         <h2
-          className="mt-8 text-center text-3xl text-cream font-display"
+          className="mt-8 text-center text-3xl text-navy font-display"
         >
           Create your account
         </h2>
-        <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-cream/40">
-          Bazario
+        <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-navy/50">
+          Dipti&Suppliers
         </p>
       </div>
 
@@ -149,7 +149,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="username"
-              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Username
             </label>
@@ -161,7 +161,7 @@ export default function Signup() {
                 autoComplete="username"
                 value={form.username}
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                className="block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="email"
-              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Email address
             </label>
@@ -181,7 +181,7 @@ export default function Signup() {
                 autoComplete="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                className="block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -189,7 +189,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="password"
-              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Password
             </label>
@@ -201,7 +201,7 @@ export default function Signup() {
                 autoComplete="new-password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                className="block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function Signup() {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block font-mono text-[11px] uppercase tracking-widest text-cream/60"
+              className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
             >
               Confirm password
             </label>
@@ -221,13 +221,13 @@ export default function Signup() {
                 autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="block w-full rounded-md bg-cream/5 px-3 py-2 text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 placeholder:text-cream/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                className="block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
               />
             </div>
           </div>
 
           <div>
-            <span className="block font-mono text-[11px] uppercase tracking-widest text-cream/60">
+            <span className="block font-mono text-[11px] uppercase tracking-widest text-navy/60">
               I want to
             </span>
             <div className="mt-2 grid grid-cols-2 gap-3">
@@ -241,8 +241,8 @@ export default function Signup() {
                   onClick={() => setForm({ ...form, role: opt.value })}
                   className={
                     form.role === opt.value
-                      ? "rounded-md bg-ochre/15 px-3 py-3 text-center text-sm text-cream outline outline-2 -outline-offset-2 outline-ochre transition"
-                      : "rounded-md bg-cream/5 px-3 py-3 text-center text-sm text-cream outline outline-1 -outline-offset-1 outline-cream/15 transition hover:outline-cream/40"
+                      ? "rounded-md bg-ochre/15 px-3 py-3 text-center text-sm text-navy outline outline-2 -outline-offset-2 outline-ochre transition"
+                      : "rounded-md bg-white px-3 py-3 text-center text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 transition hover:outline-navy/40"
                   }
                 >
                   {opt.label}
@@ -255,21 +255,21 @@ export default function Signup() {
           </div>
 
           {error && (
-            <p className="font-mono text-xs text-ochre">{error}</p>
+            <p className="font-mono text-xs text-ochre-ink">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center rounded-md bg-ochre px-3 py-2 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-cream disabled:opacity-50"
+            className="flex w-full justify-center rounded-md bg-ochre px-3 py-2 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
 
-        <p className="mt-8 text-center font-mono text-xs text-cream/50">
+        <p className="mt-8 text-center font-mono text-xs text-navy/50">
           Already have an account?{" "}
-          <Link to="/signin" className="font-semibold text-ochre hover:text-cream">
+          <Link to="/signin" className="font-semibold text-ochre-ink hover:text-navy">
             Sign in
           </Link>
         </p>

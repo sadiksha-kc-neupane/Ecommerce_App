@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer";
 
 function Otp() {
