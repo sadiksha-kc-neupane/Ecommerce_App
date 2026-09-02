@@ -82,7 +82,7 @@ function UserDashboardProducts() {
                   <span className="text-4xl text-navy/25 font-display">
                     {products.productName?.charAt(0).toUpperCase()}
                   </span>
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-navy/35">
+                  <span className="font-mono text-[8px] uppercase tracking-wider text-navy/35">
                     No photo yet
                   </span>
                 </div>
@@ -93,7 +93,7 @@ function UserDashboardProducts() {
                   {products.productName}
                 </h2>
 
-                <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-navy/60">
+                <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-navy/60">
                   <span
                     className="inline-block h-2 w-2 rounded-full"
                     style={{ backgroundColor: CATEGORY_COLORS[products.category] || "#1C1B19" }}
@@ -127,7 +127,7 @@ function UserDashboardProducts() {
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <button className="mt-2 rounded-sm border border-rust/40 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-rust transition hover:bg-rust hover:text-cream">
+                    <button className="mt-2 rounded-sm border border-rust/40 px-4 py-2 font-mono text-[10px] uppercase tracking-wider text-rust transition hover:bg-rust hover:text-cream">
                       Delete product
                     </button>
                   </AlertDialogTrigger>

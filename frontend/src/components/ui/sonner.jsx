@@ -11,10 +11,10 @@ function Toaster(props) {
         "--normal-text": "var(--popover-foreground)",
         "--normal-border": "var(--border)",
         "--success-bg": "#4f6f52",
-        "--success-text": "#fbf7f0",
+        "--success-text": "#ffffff",
         "--success-border": "#4f6f52",
         "--error-bg": "#b33f2e",
-        "--error-text": "#fbf7f0",
+        "--error-text": "#ffffff",
         "--error-border": "#b33f2e",
       }}
       {...props}

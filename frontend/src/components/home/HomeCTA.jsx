@@ -27,7 +27,7 @@ export default function HomeCTA() {
     <section className="bg-navy px-6 py-20 text-cream sm:py-24">
       <div className="mx-auto max-w-5xl">
         <div className="max-w-2xl">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ochre">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-ochre">
             How to start shopping
           </p>
           <h2 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl">

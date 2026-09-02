@@ -65,7 +65,7 @@ export default function AccountDetailsSection() {
 
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-navy/50">Your account</p>
+      <p className="font-mono text-[10px] uppercase tracking-wider text-navy/50">Your account</p>
       <h1 className="mt-1 mb-8 text-3xl text-navy font-display">Account details</h1>
 
       {!loaded && !loadError && (
@@ -84,7 +84,7 @@ export default function AccountDetailsSection() {
           className="max-w-md space-y-5 rounded-md bg-paper p-6 outline outline-1 -outline-offset-1 outline-navy/15"
         >
           <div>
-            <label htmlFor="username" className="block font-mono text-[11px] uppercase tracking-widest text-navy/60">
+            <label htmlFor="username" className="block font-mono text-[11px] uppercase tracking-wider text-navy/60">
               Username
             </label>
             <input
@@ -97,7 +97,7 @@ export default function AccountDetailsSection() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block font-mono text-[11px] uppercase tracking-widest text-navy/60">
+            <label htmlFor="email" className="block font-mono text-[11px] uppercase tracking-wider text-navy/60">
               Email address
             </label>
             <input
@@ -109,7 +109,7 @@ export default function AccountDetailsSection() {
             />
           </div>
 
-          <p className="font-mono text-[10px] tracking-widest text-navy/40">
+          <p className="font-mono text-[10px] tracking-wider text-navy/40">
             Password changes aren&apos;t available yet
           </p>
 
@@ -120,7 +120,7 @@ export default function AccountDetailsSection() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream disabled:opacity-50"
+            className="rounded-sm bg-ochre px-6 py-3 font-mono text-xs uppercase tracking-wider text-navy transition hover:bg-navy hover:text-cream disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save changes"}
           </button>

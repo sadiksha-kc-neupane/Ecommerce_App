@@ -155,10 +155,10 @@ export default function Contact() {
       <Navbar />
 
       <main>
-        <section className="border-b border-navy/10 bg-gradient-to-br from-orange-50 via-paper to-cream px-6 py-14 sm:py-16">
+        <section className="border-b border-navy/10 bg-gradient-to-br from-orange-50 via-paper to-cream px-6 py-16 sm:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-rust">Contact</p>
-            <h1 className="mt-3 font-display text-4xl font-bold text-navy">Talk to Dipti&Suppliers</h1>
+            <h1 className="mt-3 font-display text-4xl font-bold text-navy sm:text-5xl">Talk to Dipti&Suppliers</h1>
             <p className="mt-4 text-base leading-relaxed text-navy/60">
               Real people who know the hardware — reachable by phone or email
               when something needs a second opinion.

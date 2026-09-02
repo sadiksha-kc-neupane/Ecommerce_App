@@ -43,21 +43,21 @@ export default function ProductCard({ product, onAddToCart }) {
             <span className="font-display text-4xl text-navy/25">
               {product.productName?.charAt(0).toUpperCase()}
             </span>
-            <span className="font-mono text-[8px] uppercase tracking-widest text-navy/35">
+            <span className="font-mono text-[8px] uppercase tracking-wider text-navy/35">
               No photo yet
             </span>
           </div>
         )}
 
         <span
-          className={`absolute left-3 top-3 rounded-full px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest ring-1 ring-white/40 ${badge.className}`}
+          className={`absolute left-3 top-3 rounded-full px-2.5 py-1 font-mono text-[9px] uppercase tracking-wider ring-1 ring-white/40 ${badge.className}`}
         >
           {badge.label}
         </span>
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-widest text-navy/50">
+        <p className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-navy/50">
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: dotColor }} />
           {CATEGORY_LABELS[product.category] || product.category}
         </p>

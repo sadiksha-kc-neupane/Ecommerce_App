@@ -14,14 +14,20 @@ export default function RoleRoute({ allowedRoles, children }) {
   }
 
   if (!allowedRoles.includes(user.role)) {
-    toast.error(
+    toast.info(
       user.role === "seller"
-        ? "This page is for customer accounts"
-        : "This page is for seller accounts",
+        ? "Redirected to your seller dashboard"
+        : "Redirected to your customer dashboard",
       { id: "role-route-guard" }
     )
-    return <Navigate to="/" replace />
+    return (
+      <Navigate
+        to={user.role === "seller" ? "/seller-dashboard" : "/customer-dashboard"}
+        replace
+      />
+    )
   }
 
   return children
 }
+

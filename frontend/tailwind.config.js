@@ -9,7 +9,7 @@ export default {
         // pick them up automatically.
         navy: "#1C1B19", // warm near-black ink / dark surfaces
         cream: "#FFFFFF", // clean white surfaces & page background
-        paper: "#F7F3EC", // warm off-white secondary surface / cards
+        paper: "#FFFFFF", // clean white surfaces & cards
         ochre: "#D97706", // signature terracotta/amber accent (CTA, highlights)
         "ochre-ink": "#B45309", // readable dark-ochre text on light bg
         rust: "#C2410C", // destructive / negative
@@ -26,8 +26,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Fraunces", "ui-serif", "serif"],
+        sans: ["Satoshi", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Satoshi", "ui-sans-serif", "system-ui", "sans-serif"],
+        heading: ["Satoshi", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       boxShadow: {

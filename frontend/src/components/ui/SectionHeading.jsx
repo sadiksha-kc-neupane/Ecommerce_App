@@ -15,7 +15,7 @@ export default function SectionHeading({
     <div className={cn("flex items-end justify-between gap-4", className)}>
       <div>
         {eyebrow && (
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ochre-ink">{eyebrow}</p>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-ochre-ink">{eyebrow}</p>
         )}
         <Tag className="mt-2 font-display text-2xl text-navy sm:text-3xl">{title}</Tag>
       </div>

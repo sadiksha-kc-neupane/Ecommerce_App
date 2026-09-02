@@ -11,11 +11,11 @@
   --popover-foreground: #1c1b19;
   --primary: #d97706;
   --primary-foreground: #1c1b19;
-  --secondary: #f7f3ec;
+  --secondary: #ffffff;
   --secondary-foreground: #1c1b19;
-  --muted: #f7f3ec;
+  --muted: #f8fafc;
   --muted-foreground: color-mix(in srgb, #1c1b19 58%, transparent);
-  --accent: #f7f3ec;
+  --accent: #f8fafc;
   --accent-foreground: #1c1b19;
   --destructive: #c2410c;
   --destructive-foreground: #ffffff;
@@ -26,6 +26,9 @@
 }
 
 @theme inline {
+  --font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -132,13 +135,24 @@
    indicator app-wide. box-sizing is NOT redeclared — Tailwind preflight already
    sets `box-sizing: border-box` on all elements. */
 @layer base {
-  html {
+  html,
+  body {
+    font-family: 'Satoshi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     scroll-behavior: smooth;
   }
 
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  input, button, select, textarea {
+    font-family: inherit;
   }
 
   :focus-visible {
@@ -146,3 +160,4 @@
     outline-offset: 2px;
   }
 }
+

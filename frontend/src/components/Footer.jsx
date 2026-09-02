@@ -32,7 +32,7 @@ export default function Footer() {
 
         {/* Shop by category */}
         <div>
-          <h3 className="font-mono text-[10px] uppercase tracking-widest text-navy/50">Shop</h3>
+          <h3 className="font-mono text-[10px] uppercase tracking-wider text-navy/50">Shop</h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             <li>
               <Link to="/product-list" className="text-navy/75 transition hover:text-ochre-ink">
@@ -54,7 +54,7 @@ export default function Footer() {
 
         {/* Company */}
         <div>
-          <h3 className="font-mono text-[10px] uppercase tracking-widest text-navy/50">Company</h3>
+          <h3 className="font-mono text-[10px] uppercase tracking-wider text-navy/50">Company</h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             <li><Link to="/about" className="text-navy/75 transition hover:text-ochre-ink">About us</Link></li>
             <li><Link to="/contact" className="text-navy/75 transition hover:text-ochre-ink">Contact</Link></li>
@@ -64,7 +64,7 @@ export default function Footer() {
 
         {/* Account */}
         <div>
-          <h3 className="font-mono text-[10px] uppercase tracking-widest text-navy/50">Account</h3>
+          <h3 className="font-mono text-[10px] uppercase tracking-wider text-navy/50">Account</h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             <li><Link to="/signin" className="text-navy/75 transition hover:text-ochre-ink">Sign in</Link></li>
             <li><Link to="/signup" className="text-navy/75 transition hover:text-ochre-ink">Create account</Link></li>
@@ -74,7 +74,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-navy/10 py-5">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 font-mono text-[10px] uppercase tracking-widest text-navy/50 sm:flex-row">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 font-mono text-[10px] uppercase tracking-wider text-navy/50 sm:flex-row">
           <span>© {new Date().getFullYear()} Dipti&amp;Suppliers</span>
           <div className="flex gap-6">
             <Link to="/about" className="transition hover:text-navy">About</Link>

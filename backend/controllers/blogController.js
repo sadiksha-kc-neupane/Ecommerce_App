@@ -2,7 +2,6 @@ import { Blog } from "../model/index.js"
 
 // POST /blog
 export const BlogController = async (req, res) => {
-  console.log(req.body)
   const { title, subtitle, description, category } = req.body
 
   await Blog.create({

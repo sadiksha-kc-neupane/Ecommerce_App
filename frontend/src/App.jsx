@@ -1,10 +1,11 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "./context/CartProvider.jsx";
 import Home from "./components/Home.jsx";
 import PageTransition from "./components/PageTransition.jsx";
 import RoleRoute from "./components/RoleRoute.jsx";
 import { Toaster } from "./components/ui/sonner.jsx";
+import { getCurrentUser } from "./lib/auth.js";
 
 // Route-level code-splitting: the heavy/secondary pages (dashboards,
 // checkout, cart, product detail, auth, …) are fetched on demand instead of
@@ -36,6 +37,17 @@ function PageFallback() {
   );
 }
 
+function DashboardRedirect() {
+  const user = getCurrentUser();
+  if (!user) {
+    return <Navigate to="/signin" replace />;
+  }
+  if (user.role === "admin" || user.role === "seller") {
+    return <Navigate to="/admin-dashboard" replace />;
+  }
+  return <Navigate to="/customer-dashboard" replace />;
+}
+
 function App() {
   return (
     <CartProvider>
@@ -48,12 +60,15 @@ function App() {
         <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
         <Route path="/signin" element={<PageTransition><Signin /></PageTransition>} />
         <Route path="/forgotPassword" element={<PageTransition><Forgot /></PageTransition>}/>
+        <Route path="/forgot-password" element={<PageTransition><Forgot /></PageTransition>}/>
         <Route path="/otp" element={<PageTransition><Otp /></PageTransition>} />
         <Route path="/product" element={<PageTransition><Product /></PageTransition>} />
         <Route path="/product/:id" element={<PageTransition><Product /></PageTransition>} />
-        <Route path="/create-Product" element={<PageTransition><RoleRoute allowedRoles={["seller"]}><CreateProduct /></RoleRoute></PageTransition>}/>
+        <Route path="/create-Product" element={<PageTransition><RoleRoute allowedRoles={["admin", "seller"]}><CreateProduct /></RoleRoute></PageTransition>}/>
         <Route path="/product-list" element={<PageTransition><Productlist/></PageTransition>}/>
-        <Route path="/seller-dashboard" element={<PageTransition><RoleRoute allowedRoles={["seller"]}><SellerDashboard /></RoleRoute></PageTransition>} />
+        <Route path="/dashboard" element={<PageTransition><DashboardRedirect /></PageTransition>} />
+        <Route path="/admin-dashboard" element={<PageTransition><RoleRoute allowedRoles={["admin", "seller"]}><SellerDashboard /></RoleRoute></PageTransition>} />
+        <Route path="/seller-dashboard" element={<PageTransition><RoleRoute allowedRoles={["admin", "seller"]}><SellerDashboard /></RoleRoute></PageTransition>} />
         <Route path="/customer-dashboard" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><CustomerDashboard /></RoleRoute></PageTransition>} />
         <Route path="/checkout" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Checkout /></RoleRoute></PageTransition>} />
         <Route path="/cart" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Cart /></RoleRoute></PageTransition>} />

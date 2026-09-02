@@ -31,6 +31,9 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
 // ---- auth ----
 export const registerUser = (payload) => request("/auth/register", { method: "POST", body: payload })
 export const loginUser = (payload) => request("/auth/login", { method: "POST", body: payload })
+export const forgotPassword = (payload) => request("/auth/forgot-password", { method: "POST", body: payload })
+export const verifyOtp = (payload) => request("/auth/verify-otp", { method: "POST", body: payload })
+export const resetPassword = (payload) => request("/auth/reset-password", { method: "POST", body: payload })
 
 // ---- products ----
 export const fetchProducts = () => request("/fetch-product")
@@ -55,6 +58,8 @@ export const cancelOrder = (id) => request(`/product/cancel/${id}`, { method: "P
 
 // ---- seller ----
 export const fetchSellerOrders = () => request("/seller/orders", { auth: true })
+export const verifyOrderPayment = (id, payload) =>
+  request(`/orders/verify-payment/${id}`, { method: "PATCH", body: payload, auth: true })
 
 // ---- users ----
 export const fetchUsers = () => request("/fetch-users", { auth: true })

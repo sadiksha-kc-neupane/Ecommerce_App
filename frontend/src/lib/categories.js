@@ -10,7 +10,7 @@ export const CATEGORIES = [
   {
     value: "laptop",
     label: "Laptops",
-    subcategories: ["Business", "Gaming", "Ultrabooks", "2-in-1"],
+    subcategories: ["Business", "Gaming", "Ultrabooks"],
   },
   {
     value: "desktop",
@@ -20,7 +20,7 @@ export const CATEGORIES = [
   {
     value: "components",
     label: "Components",
-    subcategories: ["RAM", "Storage/SSD", "Motherboards", "Graphics Cards", "Processors", "Power Supplies"],
+    subcategories: ["RAM", "Storage/SSD", "Power Supplies"],
   },
   {
     value: "cctv",
@@ -32,15 +32,11 @@ export const CATEGORIES = [
     label: "Printer & Scanner",
     subcategories: ["Inkjet", "Laser", "Scanners", "Accessories"],
   },
-  {
-    value: "networking",
-    label: "Networking",
-    subcategories: ["Routers", "Switches", "Access Points", "Cables"],
-  },
+
   {
     value: "smartboard",
     label: "Smartboards",
-    subcategories: [],
+    subcategories: ["55'","65'","75'","86'"],
   },
 ]
 
@@ -53,7 +49,7 @@ export const CATEGORY_COLORS = {
   components: "#A75A7E", // soft rose
   cctv: "#546166", // slate gray
   printer_scanner: "#B07A3C", // amber/bronze
-  networking: "#5751A0", // indigo
+ 
   smartboard: "#8A63B8", // violet
 }
 

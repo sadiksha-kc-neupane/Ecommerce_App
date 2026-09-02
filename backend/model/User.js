@@ -30,6 +30,14 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  resetOtpHash: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetOtpExpiry: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   tableName: "users",
   timestamps: true,

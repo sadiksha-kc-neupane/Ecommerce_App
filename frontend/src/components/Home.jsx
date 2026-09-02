@@ -64,7 +64,7 @@ export default function Home() {
         )}
 
         {/* why choose / trust */}
-        <div className="py-10">
+        <div className="py-16 sm:py-20">
           <TrustBadges />
         </div>
         <WhyUs />

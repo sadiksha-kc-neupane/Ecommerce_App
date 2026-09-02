@@ -24,7 +24,7 @@ export default function FeaturedRow({ products, onAddToCart }) {
           aside={
             <Link
               to="/product-list"
-              className="hidden font-mono text-[10px] uppercase tracking-widest text-navy/50 transition hover:text-ochre-ink sm:block"
+              className="hidden font-mono text-[10px] uppercase tracking-wider text-navy/50 transition hover:text-ochre-ink sm:block"
             >
               View all &rarr;
             </Link>

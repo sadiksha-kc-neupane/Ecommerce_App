@@ -300,7 +300,7 @@ export default function Product() {
                   {stockBadge}
                 </div>
 
-                <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-navy">
+                <h1 className="mt-3 font-display text-4xl font-bold leading-tight text-navy">
                   {product.productName}
                 </h1>
 

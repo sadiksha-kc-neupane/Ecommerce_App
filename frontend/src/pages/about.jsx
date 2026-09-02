@@ -45,7 +45,7 @@ export default function About() {
 
       <main>
         {/* Hero */}
-        <section className="border-b border-navy/10 bg-gradient-to-br from-orange-50 via-paper to-cream px-6 py-16 sm:py-20">
+        <section className="border-b border-navy/10 bg-white px-6 py-16 sm:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-rust">About us</p>
             <h1 className="mt-3 font-display text-4xl font-bold leading-tight text-navy sm:text-5xl">
@@ -96,7 +96,7 @@ export default function About() {
         </section>
 
         {/* Categories */}
-        <section className="border-t border-navy/10 bg-cream px-6 py-16 sm:py-20">
+        <section className="border-t border-navy/10 bg-white px-6 py-16 sm:py-20">
           <div className="mx-auto max-w-6xl">
             <SectionHeading eyebrow="What we carry" title="Seven categories, one verified shelf" />
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
