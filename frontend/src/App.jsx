@@ -4,6 +4,7 @@ import { CartProvider } from "./context/CartProvider.jsx";
 import Home from "./components/Home.jsx";
 import PageTransition from "./components/PageTransition.jsx";
 import RoleRoute from "./components/RoleRoute.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import { Toaster } from "./components/ui/sonner.jsx";
 import { getCurrentUser } from "./lib/auth.js";
 
@@ -52,8 +53,9 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-      <Suspense fallback={<PageFallback />}>
-      <Routes>
+        <ScrollToTop />
+        <Suspense fallback={<PageFallback />}>
+        <Routes>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
