@@ -27,6 +27,7 @@ import DashboardSidebar from "../components/DashboardSidebar.jsx"
 import EmptyState from "../components/ui/EmptyState.jsx"
 import Badge from "../components/ui/Badge.jsx"
 import Price from "../components/ui/Price.jsx"
+import { formatCurrencyCompact } from "../lib/currency.js"
 import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { cn } from "../lib/utils.js"
 import { useCart } from "../context/useCart.js"
@@ -564,7 +565,7 @@ function Overview({
                     tick={{ fontSize: 10, fill: "#1C1B1980", fontFamily: "JetBrains Mono, monospace" }}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(v) => `Rs.${v >= 1000 ? `${Math.round(v / 1000)}k` : v}`}
+                    tickFormatter={formatCurrencyCompact}
                     width={58}
                   />
                   <Tooltip content={<CustomSpendingTooltip />} />

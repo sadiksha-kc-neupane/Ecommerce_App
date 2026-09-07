@@ -1,9 +1,16 @@
 import { cn } from "../../lib/utils.js"
+import { formatCurrency } from "../../lib/currency.js"
 
-// Consistent price display. Renders a dollar amount from a numeric/string
-// value, defaulting to 2 decimal places. Pass `className` to control size.
-export default function Price({ value, className, prefix = "$" }) {
-  const amount = Number(value)
-  const display = Number.isFinite(amount) ? amount.toFixed(2) : "0.00"
-  return <span className={cn("font-mono tabular-nums", className)}>{prefix}{display}</span>
+// Consistent price display. Renders an NPR formatted amount from a numeric/string
+// value with Rs. prefix and Nepali lakh digit grouping. Pass `className` to control typography.
+export default function Price({ value, className, prefix }) {
+  const display =
+    prefix !== undefined
+      ? `${prefix}${Number(value || 0).toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`
+      : formatCurrency(value)
+
+  return <span className={cn("font-mono tabular-nums", className)}>{display}</span>
 }

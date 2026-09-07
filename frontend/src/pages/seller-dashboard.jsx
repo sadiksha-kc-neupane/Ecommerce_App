@@ -33,6 +33,7 @@ import DashboardSidebar from "../components/DashboardSidebar.jsx"
 import EmptyState from "../components/ui/EmptyState.jsx"
 import Badge from "../components/ui/Badge.jsx"
 import Price from "../components/ui/Price.jsx"
+import { formatCurrency, formatCurrencyCompact } from "../lib/currency.js"
 import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { getCurrentUser } from "../lib/auth.js"
 import { fetchProducts, fetchSellerOrders, fetchSingleUser, verifyOrderPayment } from "../lib/api.js"
@@ -229,7 +230,7 @@ function CustomRevenueTooltip({ active, payload }) {
   return (
     <div className="rounded-lg border border-navy/15 bg-white p-2.5 shadow-lift font-mono text-xs text-navy">
       <p className="text-[10px] uppercase tracking-wider text-navy/50">{data.fullLabel}</p>
-      <p className="mt-1 text-sm font-semibold text-ochre-ink">NPR {data.total.toLocaleString()}</p>
+      <p className="mt-1 text-sm font-semibold text-ochre-ink">{formatCurrency(data.total)}</p>
       <p className="text-[10px] text-navy/60">{data.orderCount} active sales</p>
     </div>
   )
@@ -610,10 +611,16 @@ function Overview({ products, sales, profile, loading, error, onViewListings, on
               </p>
               <div className="mt-4 h-56 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={revenueSeries} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <BarChart data={revenueSeries} margin={{ top: 10, right: 10, left: -6, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                     <XAxis dataKey="label" stroke="#6B7280" fontSize={11} tickLine={false} />
-                    <YAxis stroke="#6B7280" fontSize={11} tickLine={false} />
+                    <YAxis
+                      stroke="#6B7280"
+                      fontSize={11}
+                      tickLine={false}
+                      tickFormatter={formatCurrencyCompact}
+                      width={58}
+                    />
                     <Tooltip content={<CustomRevenueTooltip />} />
                     <Bar dataKey="total" fill="#D97706" radius={[4, 4, 0, 0]} />
                   </BarChart>

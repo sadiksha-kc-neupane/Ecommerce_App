@@ -4,16 +4,18 @@
 // extra routing code.
 
 import { CATEGORIES, CATEGORY_LABELS } from "./categories.js"
+import { formatCurrency } from "./currency.js"
 
 export const DEFAULT_SORT = "relevance"
 
 // Quick "max price" budgets for the price filter. value 0 = no upper bound.
 export const PRICE_BUDGETS = [
   { label: "Any price", value: 0 },
-  { label: "Under $500", value: 500 },
-  { label: "Under $1,000", value: 1000 },
-  { label: "Under $2,000", value: 2000 },
-  { label: "Under $5,000", value: 5000 },
+  { label: "Under Rs. 10k", value: 10000 },
+  { label: "Under Rs. 25k", value: 25000 },
+  { label: "Under Rs. 50k", value: 50000 },
+  { label: "Under Rs. 1,00,000", value: 100000 },
+  { label: "Under Rs. 2,00,000", value: 200000 },
 ]
 
 export const SORT_OPTIONS = [
@@ -94,7 +96,7 @@ export function chipList(catalog) {
   if (catalog.maxPrice) {
     chips.push({
       id: "maxPrice",
-      label: `Under $${Number(catalog.maxPrice).toLocaleString()}`,
+      label: `Under ${formatCurrency(catalog.maxPrice)}`,
       clear: { maxPrice: null },
     })
   }

@@ -155,18 +155,24 @@ export default function CreateProduct() {
                 htmlFor="price"
                 className="block font-mono text-[11px] uppercase tracking-widest text-navy/60"
               >
-                Price ($)
+                Price (NPR)
               </label>
-              <input
-                id="price"
-                type="number"
-                min="0"
-                step="0.01"
-                required
-                value={form.price}
-                onChange={(e) => update("price", e.target.value)}
-                className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
-              />
+              <div className="relative mt-2">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 font-mono text-xs font-semibold text-navy/50">
+                  Rs.
+                </span>
+                <input
+                  id="price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  required
+                  placeholder="0.00"
+                  value={form.price}
+                  onChange={(e) => update("price", e.target.value)}
+                  className="block w-full rounded-md bg-white py-2 pl-10 pr-3 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                />
+              </div>
             </div>
 
             <div>

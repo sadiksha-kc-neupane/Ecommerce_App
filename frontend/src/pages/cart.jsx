@@ -10,6 +10,7 @@ import { buttonVariants } from "../components/ui/buttonVariants.js"
 import { cn } from "../lib/utils.js"
 import { fetchCart, removeFromCart, updateCartItem } from "../lib/api.js"
 import { toLine } from "../lib/cart.js"
+import { formatCurrency } from "../lib/currency.js"
 import { useCart } from "../context/useCart.js"
 
 export default function Cart() {
@@ -210,7 +211,7 @@ export default function Cart() {
 function PriceText({ value, each = false }) {
   return (
     <span className="font-mono text-xs text-navy/60">
-      ${Number(value).toFixed(2)}
+      {formatCurrency(value)}
       {each ? " each" : ""}
     </span>
   )
