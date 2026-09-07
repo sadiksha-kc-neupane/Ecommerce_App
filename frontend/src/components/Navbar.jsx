@@ -134,6 +134,22 @@ export default function Navbar() {
           >
             {(user.role === "admin" || user.role === "seller") ? "Admin Workspace" : "My Account & Orders"}
           </Link>
+          {user.role === "admin" && (
+            <Link
+              to="/create-blog"
+              onClick={() => setProfileOpen(false)}
+              className="block rounded-md px-3 py-2 text-sm font-semibold text-ochre-ink transition hover:bg-ochre/10 hover:text-navy"
+            >
+              + Write Blog Post
+            </Link>
+          )}
+          <Link
+            to="/blog-list"
+            onClick={() => setProfileOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-navy/80 transition hover:bg-navy/5 hover:text-navy"
+          >
+            Guides &amp; Blog
+          </Link>
           <Link
             to="/cart"
             onClick={() => setProfileOpen(false)}
@@ -315,7 +331,15 @@ export default function Navbar() {
             </div>
           ))}
 
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-1">
+            <Link
+              to="/blog-list"
+              className={`px-3 py-2.5 font-mono text-[12px] uppercase tracking-wider transition ${
+                location.pathname.startsWith("/blog") ? "text-ochre" : "text-navy/75 hover:text-navy"
+              }`}
+            >
+              Guides &amp; Blog
+            </Link>
             <Link
               to="/product-list"
               className={`px-3 py-2.5 font-mono text-[12px] uppercase tracking-wider transition ${
@@ -340,6 +364,18 @@ export default function Navbar() {
             className="overflow-hidden border-t border-navy/10 bg-white px-6 pb-6 pt-3 lg:hidden"
           >
             <div className="flex flex-col gap-1">
+              {/* Quick link to Guides */}
+              <div className="border-b border-navy/5 py-2">
+                <Link
+                  to="/blog-list"
+                  onClick={() => setMobileOpen(false)}
+                  className={`font-mono text-sm uppercase tracking-wider ${
+                    location.pathname.startsWith("/blog") ? "text-ochre-ink font-semibold" : "text-navy/80"
+                  }`}
+                >
+                  Hardware Guides &amp; Blog
+                </Link>
+              </div>
               {CATEGORIES.map((cat) => (
                 <div key={cat.value} className="border-b border-navy/5 py-2">
                   <div className="flex items-center justify-between">

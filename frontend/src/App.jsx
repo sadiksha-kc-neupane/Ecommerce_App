@@ -26,6 +26,9 @@ const CustomerDashboard = lazy(() => import("./pages/customer-dashboard"));
 const Checkout = lazy(() => import("./pages/checkout"));
 const Cart = lazy(() => import("./pages/cart"));
 const OrderConfirmation = lazy(() => import("./pages/order-confirmation"));
+const BlogList = lazy(() => import("./pages/blog-list"));
+const BlogPost = lazy(() => import("./pages/blog-post"));
+const CreateBlog = lazy(() => import("./pages/create-blog"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function PageFallback() {
@@ -75,6 +78,10 @@ function App() {
         <Route path="/checkout" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Checkout /></RoleRoute></PageTransition>} />
         <Route path="/cart" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><Cart /></RoleRoute></PageTransition>} />
         <Route path="/order-confirmation/:id" element={<PageTransition><RoleRoute allowedRoles={["customer"]}><OrderConfirmation /></RoleRoute></PageTransition>} />
+        <Route path="/blog-list" element={<PageTransition><BlogList /></PageTransition>} />
+        <Route path="/blogs" element={<PageTransition><BlogList /></PageTransition>} />
+        <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
+        <Route path="/create-blog" element={<PageTransition><RoleRoute allowedRoles={["admin"]}><CreateBlog /></RoleRoute></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
       </Suspense>

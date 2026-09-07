@@ -3,34 +3,43 @@ import { sequelize } from "../config/connection.js"
 
 const Blog = sequelize.define("Blog", {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   userId: {
     type: DataTypes.UUID,
-    allowNull: true, // set this if you want to track who wrote it
+    allowNull: true,
   },
   title: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
+  slug: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
   subtitle: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
   description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  thumbnail: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
   category: {
-    // NOTE: your original had "59" as a value here, which looks like a typo.
-    // Replace with your real category names.
-    type: DataTypes.ENUM("politics", "tech", "coding"),
-    defaultValue: "coding",
+    type: DataTypes.ENUM("buying-guides", "tech-tips", "announcements", "news"),
+    defaultValue: "news",
   },
 }, {
   tableName: "blogs",
   timestamps: true,
 })
 
-export default Blog
+export default Blog

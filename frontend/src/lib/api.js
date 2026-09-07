@@ -65,3 +65,13 @@ export const verifyOrderPayment = (id, payload) =>
 export const fetchUsers = () => request("/fetch-users", { auth: true })
 export const fetchSingleUser = (id) => request(`/fetch-single/${id}`, { auth: true })
 export const updateUser = (id, payload) => request(`/update-users/${id}`, { method: "PATCH", body: payload, auth: true })
+
+// ---- blogs ----
+export const fetchBlogs = (params) => {
+  const query = params ? new URLSearchParams(params).toString() : ""
+  return request(`/fetch-blog${query ? `?${query}` : ""}`)
+}
+export const fetchBlogBySlug = (slug) => request(`/fetch-single-blog/${slug}`)
+export const createBlog = (payload) => request("/blog", { method: "POST", body: payload, auth: true })
+export const updateBlog = (id, payload) => request(`/update-blog/${id}`, { method: "PATCH", body: payload, auth: true })
+export const deleteBlog = (id) => request(`/delete-blog/${id}`, { method: "DELETE", auth: true })

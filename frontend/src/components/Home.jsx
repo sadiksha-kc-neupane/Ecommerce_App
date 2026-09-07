@@ -11,6 +11,7 @@ import { toast } from "sonner"
 import WhyUs from "./WhyUs.jsx"
 import CategoryGrid from "./home/CategoryGrid.jsx"
 import HomeCTA from "./home/HomeCTA.jsx"
+import BlogTeaserRow from "./home/BlogTeaserRow.jsx"
 import SectionHeading from "./ui/SectionHeading.jsx"
 
 export default function Home() {
@@ -83,6 +84,9 @@ export default function Home() {
             </div>
           </section>
         )}
+
+        {/* Knowledge & blog guides */}
+        <BlogTeaserRow />
       </main>
 
       <HomeCTA />

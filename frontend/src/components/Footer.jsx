@@ -58,7 +58,7 @@ export default function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm">
             <li><Link to="/about" className="text-navy/75 transition hover:text-ochre-ink">About us</Link></li>
             <li><Link to="/contact" className="text-navy/75 transition hover:text-ochre-ink">Contact</Link></li>
-            <li><Link to="/signup" className="text-navy/75 transition hover:text-ochre-ink">Sell with us</Link></li>
+            <li><Link to="/blog-list" className="text-navy/75 transition hover:text-ochre-ink">Guides &amp; Blog</Link></li>
           </ul>
         </div>
 

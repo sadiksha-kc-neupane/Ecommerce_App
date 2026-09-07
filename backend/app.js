@@ -77,6 +77,7 @@ import {
   fetchBlog,
   fetchSingleBlog,
   editBlog,
+  deleteBlog,
 } from "./controllers/blogController.js"
 import { addToCart, fetchCart, removeFromCart, updateCartItem } from "./controllers/cartController.js"
 import { buyProduct, cancelOrder, fetchOrders, fetchSingleOrder, fetchSellerOrders, verifyPayment } from "./controllers/orderController.js"
@@ -179,6 +180,7 @@ app.post("/blog", verifyToken, requireRole("admin"), BlogController)
 app.get("/fetch-blog", fetchBlog)
 app.get("/fetch-single-blog/:id", fetchSingleBlog)
 app.patch("/update-blog/:id", verifyToken, requireRole("admin"), editBlog)
+app.delete("/delete-blog/:id", verifyToken, requireRole("admin"), deleteBlog)
 
 // ---- 404 fallback (must be registered after all routes) ----
 app.use((req, res) => {

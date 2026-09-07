@@ -1,12 +1,16 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { loginUser } from "../lib/api.js"
 import Navbar from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
 
 export default function Signin() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const justRegistered = location.state?.justRegistered
   const [form, setForm] = useState({ email: "", password: "" })
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -19,7 +23,7 @@ export default function Signin() {
       localStorage.setItem("token", res.token)
       navigate("/dashboard")
     } catch (err) {
-      setError(err.message)
+      setError(err.message || "Failed to sign in. Please check your credentials.")
     } finally {
       setLoading(false)
     }
@@ -43,7 +47,13 @@ export default function Signin() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            {justRegistered && (
+              <div className="mt-6 rounded-xl bg-emerald-50 border border-emerald-200/60 p-3.5 text-xs font-medium text-emerald-800 text-center">
+                Account created successfully! Please sign in with your credentials.
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="mt-6 space-y-5">
               <div>
                 <label
                   htmlFor="email"
@@ -79,16 +89,27 @@ export default function Signin() {
                     Forgot password?
                   </Link>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     required
                     autoComplete="current-password"
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    className="block w-full rounded-xl bg-white px-3.5 py-2.5 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
+                    className="block w-full rounded-xl bg-white px-3.5 py-2.5 pr-10 text-sm text-navy outline outline-1 -outline-offset-1 outline-navy/15 placeholder:text-navy/30 focus:outline-2 focus:-outline-offset-2 focus:outline-ochre"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy transition cursor-pointer"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </button>
                 </div>
               </div>
 

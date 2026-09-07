@@ -42,6 +42,8 @@ OrderItem.belongsTo(Product, { foreignKey: "productId" })
 
 // ---- Order <-> Product (many-to-many, realized through OrderItem) ----
 Order.belongsToMany(Product, { through: OrderItem, foreignKey: "orderId", otherKey: "productId" })
-Product.belongsToMany(Order, { through: OrderItem, foreignKey: "productId", otherKey: "orderId" })
+// ---- User <-> Blog (1 user/admin creates many blog posts) ----
+User.hasMany(Blog, { foreignKey: "userId", onDelete: "SET NULL" })
+Blog.belongsTo(User, { foreignKey: "userId" })
 
-export { sequelize,Blog, User, Product, Cart, CartItem, Order, OrderItem }
+export { sequelize, Blog, User, Product, Cart, CartItem, Order, OrderItem }
