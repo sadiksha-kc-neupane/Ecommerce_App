@@ -167,13 +167,15 @@ export const editProduct = async (req, res) => {
     return res.status(400).json({ message: validated.message })
   }
 
+  const where = req.user.role === "admin" ? { id } : { id, userId }
+
   const [updatedRows] = await Product.update(
     {
       ...validated.values,
       description,
       productImages: img.value,
     },
-    { where: { id, userId } }
+    { where }
   )
 
   if (updatedRows === 0) {
@@ -186,8 +188,9 @@ export const editProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   const Productid = req.params.id
   const userId = req.user.id
+  const where = req.user.role === "admin" ? { id: Productid } : { id: Productid, userId }
 
-  const deletedRows = await Product.destroy({ where: { id: Productid, userId } })
+  const deletedRows = await Product.destroy({ where })
 
   if (deletedRows === 0) {
     return res.status(404).json({ message: "Product not found or not owned by you" })

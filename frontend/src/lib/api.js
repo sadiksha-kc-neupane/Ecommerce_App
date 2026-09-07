@@ -1,7 +1,6 @@
 // Central API wrapper -- every page imports from here instead of
 // hardcoding fetch() calls and the backend base URL everywhere.
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
+const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/+$/, "")
 
 function getToken() {
   return localStorage.getItem("token")

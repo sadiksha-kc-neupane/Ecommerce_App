@@ -147,11 +147,11 @@ app.post("/auth/verify-otp", authLimiter, verifyOtp)
 app.post("/auth/reset-password", authLimiter, resetPassword)
 
 // ---- product ----
-app.post("/product", verifyToken, requireRole("seller"), ProductController)
+app.post("/product", verifyToken, requireRole("seller", "admin"), ProductController)
 app.get("/fetch-product", fetchProduct)
 app.get("/fetch-single-product/:id", fetchSingleProduct)
-app.patch("/update-product/:id", verifyToken, requireRole("seller"), editProduct)
-app.delete("/delete-product/:id", verifyToken, requireRole("seller"), deleteProduct)
+app.patch("/update-product/:id", verifyToken, requireRole("seller", "admin"), editProduct)
+app.delete("/delete-product/:id", verifyToken, requireRole("seller", "admin"), deleteProduct)
 
 // ---- cart ----
 app.post("/product/add-to-cart", verifyToken, requireRole("customer"), addToCart)
