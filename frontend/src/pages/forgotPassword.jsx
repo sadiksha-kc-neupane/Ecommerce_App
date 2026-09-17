@@ -305,7 +305,7 @@ export default function ForgotPassword() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full rounded-2xl bg-[#5C72EA] hover:bg-[#4B60D8] active:scale-[0.99] py-3.5 px-4 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-150 disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full rounded-2xl bg-[#FF7F50] hover:brightness-105 hover:shadow-md active:scale-[0.99] py-3.5 px-4 text-sm font-semibold text-white shadow-sm transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       {loading ? (
                         <>
@@ -406,7 +406,7 @@ export default function ForgotPassword() {
                     <button
                       type="submit"
                       disabled={loading || otp.join("").length !== 4}
-                      className="w-full rounded-2xl bg-[#5C72EA] hover:bg-[#4B60D8] active:scale-[0.99] py-3.5 px-4 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-150 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full rounded-2xl bg-[#FF7F50] hover:brightness-105 hover:shadow-md active:scale-[0.99] py-3.5 px-4 text-sm font-semibold text-white shadow-sm transition-all duration-150 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       {loading ? (
                         <>
@@ -567,7 +567,7 @@ export default function ForgotPassword() {
                     <button
                       type="submit"
                       disabled={loading || !newPassword || !confirmPassword}
-                      className="w-full rounded-2xl bg-[#5C72EA] hover:bg-[#4B60D8] active:scale-[0.99] py-3.5 px-4 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-150 disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full rounded-2xl bg-[#FF7F50] hover:brightness-105 hover:shadow-md active:scale-[0.99] py-3.5 px-4 text-sm font-semibold text-white shadow-sm transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       {loading ? (
                         <>

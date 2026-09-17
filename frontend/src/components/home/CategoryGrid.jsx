@@ -26,7 +26,7 @@ export default function CategoryGrid({ counts }) {
     .filter(Boolean)
     .map((cat) => ({
       ...cat,
-      color: CATEGORY_COLORS[cat.value] || "#1C1B19",
+      color: CATEGORY_COLORS[cat.value] || "#0F766E",
       count: counts?.[cat.value] ?? null,
     }))
 
@@ -38,7 +38,7 @@ export default function CategoryGrid({ counts }) {
           aside={
             <Link
               to="/product-list"
-              className="hidden font-mono text-[10px] uppercase tracking-wider text-navy/50 transition hover:text-ochre-ink sm:block"
+              className="hidden font-mono text-[10px] uppercase tracking-wider text-navy/50 transition hover:text-[#D45627] sm:block"
             >
               View all products &rarr;
             </Link>
@@ -50,7 +50,7 @@ export default function CategoryGrid({ counts }) {
             <Link
               key={cat.value}
               to={`/product-list?category=${encodeURIComponent(cat.value)}`}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-navy/10 bg-paper/40 p-5 shadow-card transition duration-300 hover:-translate-y-1 hover:border-ochre/50 hover:bg-white hover:shadow-lift"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-navy/10 bg-paper/40 p-5 shadow-card transition duration-300 hover:-translate-y-1 hover:border-[#FF7F50]/50 hover:bg-white hover:shadow-lift"
             >
               <span
                 aria-hidden="true"
@@ -63,13 +63,13 @@ export default function CategoryGrid({ counts }) {
                   {cat.label}
                 </h3>
                 {cat.subcategories.length > 0 && (
-                  <p className="mt-2 line-clamp-1 text-[11px] leading-relaxed text-navy/45">
+                  <p className="mt-2 line-clamp-1 text-[11px] leading-relaxed text-navy/55">
                     {cat.subcategories.join(" · ")}
                   </p>
                 )}
               </div>
 
-              <span className="mt-4 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-ochre">
+              <span className="mt-4 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[#FF7F50] font-semibold">
                 Explore
                 <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </span>

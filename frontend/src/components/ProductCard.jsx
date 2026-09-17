@@ -12,19 +12,19 @@ export default function ProductCard({ product, onAddToCart }) {
   const reduceMotion = useReducedMotion()
   const outOfStock = Number(product.stock) <= 0 || product.status === "out_of_stock"
   const lowStock = !outOfStock && isLowStock(product.stock)
-  const dotColor = CATEGORY_COLORS[product.category] || "#1C1B19"
+  const dotColor = CATEGORY_COLORS[product.category] || "#0F766E"
   const productPath = `/product/${product.id}`
   const badge = outOfStock
-    ? { label: "Out of stock", className: "bg-navy/75 text-cream" }
+    ? { label: "Out of stock", className: "bg-[#E2E8F0] text-[#64748B] border border-[#CBD5E1]" }
     : lowStock
-      ? { label: `Only ${product.stock} left`, className: "bg-teal text-cream" }
+      ? { label: `Only ${product.stock} left`, className: "bg-teal text-white" }
       : { label: "In stock", className: "bg-white text-moss shadow-sm" }
 
   return (
     <motion.div
       whileHover={reduceMotion ? undefined : { y: -4 }}
       transition={{ type: "spring", stiffness: 320, damping: 24 }}
-      className="group flex flex-col overflow-hidden rounded-lg border border-navy/10 bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-ochre/40 hover:shadow-lift will-change-transform"
+      className="group flex flex-col overflow-hidden rounded-lg border border-navy/10 bg-white shadow-card transition-[box-shadow,border-color] duration-300 hover:border-[#FF7F50]/50 hover:shadow-lift will-change-transform"
     >
       <Link
         to={productPath}
@@ -63,7 +63,7 @@ export default function ProductCard({ product, onAddToCart }) {
         </p>
 
         <Link to={productPath}>
-          <h3 className="line-clamp-2 font-display text-sm font-semibold leading-snug text-navy transition-colors group-hover:text-ochre">
+          <h3 className="line-clamp-2 font-display text-sm font-semibold leading-snug text-navy transition-colors group-hover:text-[#FF7F50]">
             {product.productName}
           </h3>
         </Link>
@@ -75,14 +75,14 @@ export default function ProductCard({ product, onAddToCart }) {
               type="button"
               onClick={() => onAddToCart(product.id)}
               disabled={outOfStock}
-              className="rounded-md bg-navy px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-cream transition hover:bg-ochre hover:text-navy active:scale-95 disabled:cursor-not-allowed disabled:bg-navy/15 disabled:text-navy/40"
+              className="rounded-md bg-[#FF7F50] px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white font-semibold transition hover:bg-[#E86C3E] active:scale-95 disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#64748B] disabled:shadow-none shadow-xs cursor-pointer"
             >
               {outOfStock ? "Sold out" : "Add to cart"}
             </button>
           ) : (
             <Link
               to={productPath}
-              className="rounded-md border border-navy/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-navy transition hover:border-ochre hover:text-ochre"
+              className="rounded-md border border-navy/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-navy transition hover:border-[#FF7F50] hover:text-[#FF7F50]"
             >
               View details
             </Link>

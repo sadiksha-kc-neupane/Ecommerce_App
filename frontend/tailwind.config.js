@@ -4,17 +4,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm Dipti&Suppliers brand foundation (modernised, not pale/beige).
-        // Keep these token names — existing utility classes (bg-navy, text-ochre…)
-        // pick them up automatically.
-        navy: "#1C1B19", // warm near-black ink / dark surfaces
-        cream: "#FFFFFF", // clean white surfaces & page background
-        paper: "#FFFFFF", // clean white surfaces & cards
-        ochre: "#D97706", // signature terracotta/amber accent (CTA, highlights)
-        "ochre-ink": "#B45309", // readable dark-ochre text on light bg
+        // Teal and Coral brand foundation
+        teal: {
+          DEFAULT: "#0F766E",
+          dark: "#0D655E",
+          light: "#14B8A6",
+        },
+        coral: {
+          DEFAULT: "#FF7F50",
+          hover: "#E86C3E",
+          dark: "#D45627",
+          light: "#FFA07A",
+        },
+        // Existing token names mapped to Teal & Coral palette
+        navy: "#333333", // standard dark gray for text
+        cream: "#FAFAFA", // Pearl White page background
+        paper: "#FAFAFA", // Pearl White page background
+        ochre: "#FF7F50", // Warm Coral accent (CTA, highlights, badges)
+        "ochre-ink": "#D45627", // readable dark coral on light background
         rust: "#C2410C", // destructive / negative
-        moss: "#3F6212", // positive / in stock
-        teal: "#0F766E", // low-stock alert
+        moss: "#16A34A", // positive / in stock
+        muted: {
+          DEFAULT: "#E2E8F0",
+          foreground: "#64748B",
+        },
         category: {
           laptop: "#3D7CA6",
           desktop: "#A68A5B",
@@ -32,8 +45,8 @@ export default {
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(28,27,25,0.05), 0 1px 3px rgba(28,27,25,0.06)",
-        lift: "0 14px 34px -14px rgba(28,27,25,0.28)",
+        card: "0 1px 3px rgba(15, 118, 110, 0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        lift: "0 14px 34px -14px rgba(15, 118, 110, 0.22)",
       },
       borderRadius: {
         xl: "0.85rem",

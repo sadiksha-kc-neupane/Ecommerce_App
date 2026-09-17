@@ -74,12 +74,12 @@ export default function HeroSlider() {
         className="absolute inset-0 z-10"
         style={{
           background:
-            "linear-gradient(to right, #FFFFFF 0%, #FFFFFF 30%, rgba(255,255,255,0.7) 48%, rgba(255,255,255,0) 65%)",
+            "linear-gradient(to right, #FAFAFA 0%, #FAFAFA 30%, rgba(250,250,250,0.7) 48%, rgba(250,250,250,0) 65%)",
         }}
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 select-none text-[11rem] leading-none text-ochre/[0.06] font-display sm:text-[16rem]"
+        className="pointer-events-none absolute inset-0 z-10 select-none text-[11rem] leading-none text-[#0F766E]/[0.05] font-display sm:text-[16rem]"
         style={{ textAlign: "right", paddingRight: "1rem", paddingTop: "1rem" }}
       >
         D&S
@@ -97,7 +97,7 @@ export default function HeroSlider() {
             transition={{ duration: reduceMotion ? 0 : 0.5, ease: "easeOut" }}
             className="max-w-lg text-center sm:text-left"
           >
-            <p className="font-mono text-[10px] uppercase tracking-wider text-ochre-ink">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-[#0F766E] font-semibold">
               {slide.eyebrow}
             </p>
 
@@ -105,13 +105,13 @@ export default function HeroSlider() {
               {slide.heading}
             </h1>
 
-            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-navy/60 sm:mx-0 sm:text-base">
+            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-navy/70 sm:mx-0 sm:text-base">
               {slide.body}
             </p>
 
             <button
               onClick={() => navigate("/product-list")}
-              className="group mt-8 inline-flex items-center gap-3 rounded-lg bg-ochre px-7 py-3 font-mono text-[11px] uppercase tracking-wider text-navy transition-colors hover:bg-navy hover:text-cream"
+              className="group mt-8 inline-flex items-center gap-3 rounded-lg bg-[#FF7F50] px-7 py-3 font-mono text-[11px] uppercase tracking-wider text-white font-semibold transition-colors hover:bg-[#E86C3E] shadow-sm cursor-pointer"
             >
               {slide.cta}
               <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -127,7 +127,7 @@ export default function HeroSlider() {
         type="button"
         aria-label="Previous slide"
         onClick={() => setIndex((i) => (i - 1 + SLIDES.length) % SLIDES.length)}
-        className="absolute left-3 top-1/2 z-30 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-navy/20 bg-cream/80 text-navy/60 backdrop-blur-sm transition hover:border-ochre hover:text-ochre sm:flex"
+        className="absolute left-3 top-1/2 z-30 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-navy/20 bg-white/80 text-navy/70 backdrop-blur-sm transition hover:border-[#FF7F50] hover:text-[#FF7F50] sm:flex cursor-pointer"
       >
         &larr;
       </button>
@@ -135,7 +135,7 @@ export default function HeroSlider() {
         type="button"
         aria-label="Next slide"
         onClick={() => setIndex((i) => (i + 1) % SLIDES.length)}
-        className="absolute right-3 top-1/2 z-30 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-navy/20 bg-cream/80 text-navy/60 backdrop-blur-sm transition hover:border-ochre hover:text-ochre sm:flex"
+        className="absolute right-3 top-1/2 z-30 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-navy/20 bg-white/80 text-navy/70 backdrop-blur-sm transition hover:border-[#FF7F50] hover:text-[#FF7F50] sm:flex cursor-pointer"
       >
         &rarr;
       </button>
@@ -148,8 +148,8 @@ export default function HeroSlider() {
             type="button"
             aria-label={`Go to slide ${i + 1}`}
             onClick={() => setIndex(i)}
-            className={`h-1 rounded-full transition-all duration-500 ${
-              i === index ? "w-8 bg-ochre" : "w-3 bg-navy/30 hover:bg-navy/60"
+            className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+              i === index ? "w-8 bg-[#FF7F50]" : "w-3 bg-navy/30 hover:bg-navy/60"
             }`}
           />
         ))}

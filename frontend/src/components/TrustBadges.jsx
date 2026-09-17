@@ -43,10 +43,10 @@ export default function TrustBadges() {
         {BADGES.map((b) => (
           <div
             key={b.label}
-            className="group flex items-center justify-between gap-4 rounded-full border border-navy/10 bg-white px-5 py-3.5 shadow-card transition duration-200 hover:border-ochre/40 hover:shadow-lift"
+            className="group flex items-center justify-between gap-4 rounded-full border border-navy/10 bg-white px-5 py-3.5 shadow-card transition duration-200 hover:border-[#FF7F50]/40 hover:shadow-lift"
           >
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-ochre/10 text-ochre transition duration-200 group-hover:bg-ochre group-hover:text-white">
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#FF7F50]/10 text-[#FF7F50] transition duration-200 group-hover:bg-[#FF7F50] group-hover:text-white">
                 {b.icon}
               </span>
               <div>
@@ -58,7 +58,7 @@ export default function TrustBadges() {
                 </p>
               </div>
             </div>
-            <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-navy/5 text-navy/40 transition duration-200 group-hover:bg-ochre/15 group-hover:text-ochre-ink">
+            <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-navy/5 text-navy/40 transition duration-200 group-hover:bg-[#FF7F50]/15 group-hover:text-[#D45627]">
               <ArrowRightIcon
                 className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
                 aria-hidden="true"

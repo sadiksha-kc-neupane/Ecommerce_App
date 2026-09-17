@@ -7,12 +7,14 @@ import { cn } from "../../lib/utils.js"
 const tones = {
   moss: "bg-moss/15 text-moss",
   teal: "bg-teal/15 text-teal",
-  ochre: "bg-ochre/20 text-ochre-ink",
-  navy: "bg-navy/10 text-navy",
+  ochre: "bg-coral/15 text-[#D45627]",
+  coral: "bg-coral/15 text-[#D45627]",
+  navy: "bg-teal/10 text-teal",
   rust: "bg-rust/15 text-rust",
-  neutral: "bg-navy/5 text-navy/60",
-  solidNavy: "bg-navy text-cream",
-  solidTeal: "bg-teal text-cream",
+  neutral: "bg-[#E2E8F0] text-[#64748B]",
+  solidNavy: "bg-teal text-white",
+  solidTeal: "bg-teal text-white",
+  solidCoral: "bg-coral text-white",
 }
 
 export default function Badge({ tone = "neutral", className, children, ...props }) {

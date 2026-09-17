@@ -122,7 +122,7 @@ export default function Signin() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full justify-center rounded-xl bg-ochre px-4 py-3 font-mono text-xs uppercase tracking-widest text-navy transition hover:bg-navy hover:text-cream disabled:opacity-50 cursor-pointer shadow-sm"
+                className="flex w-full justify-center rounded-xl bg-[#FF7F50] px-4 py-3 font-mono text-xs uppercase tracking-widest text-white font-semibold shadow-sm transition-all duration-150 hover:brightness-105 hover:shadow-md active:scale-[0.99] disabled:opacity-50 cursor-pointer"
               >
                 {loading ? "Signing in..." : "Sign in"}
               </button>

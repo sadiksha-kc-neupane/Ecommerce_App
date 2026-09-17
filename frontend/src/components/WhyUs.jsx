@@ -37,7 +37,7 @@ export default function WhyUs() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
           {/* Typical marketplaces — plain, muted */}
-          <div className="flex flex-col rounded-md bg-paper p-7 outline outline-1 -outline-offset-1 outline-navy/15 sm:p-9">
+          <div className="flex flex-col rounded-md bg-white p-7 outline outline-1 -outline-offset-1 outline-navy/15 shadow-card sm:p-9">
             <p className="font-mono text-[10px] uppercase tracking-wider text-navy/40">
               Elsewhere
             </p>
@@ -61,27 +61,27 @@ export default function WhyUs() {
           </div>
 
           {/* Dipti&Suppliers — featured */}
-          <div className="relative flex flex-col rounded-md bg-navy p-7 text-cream sm:p-9">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-ochre">
+          <div className="relative flex flex-col rounded-md bg-[#0F766E] p-7 text-white shadow-md sm:p-9">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-[#FF7F50] font-semibold">
               Our promise
             </p>
-            <h3 className="mt-2 text-xl font-display">Dipti&Suppliers</h3>
+            <h3 className="mt-2 text-xl font-display text-white">Dipti&amp;Suppliers</h3>
 
             <ul className="mt-6 flex flex-1 flex-col gap-4">
               {whyCounts.map((feature) => (
                 <li key={feature} className="flex items-start gap-3">
                   <CheckIcon
                     aria-hidden="true"
-                    className="mt-0.5 h-5 w-5 flex-none text-ochre"
+                    className="mt-0.5 h-5 w-5 flex-none text-[#FF7F50]"
                   />
-                  <span className="text-sm leading-relaxed text-cream/85">{feature}</span>
+                  <span className="text-sm leading-relaxed text-white/90">{feature}</span>
                 </li>
               ))}
             </ul>
 
             <Link
               to="/signup"
-              className="mt-8 block rounded-sm bg-ochre px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-navy transition hover:bg-cream"
+              className="mt-8 block rounded-md bg-[#FF7F50] px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-white font-semibold transition hover:bg-[#E86C3E] shadow-xs"
             >
               Shop the catalog
             </Link>
