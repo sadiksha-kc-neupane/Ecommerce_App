@@ -38,7 +38,7 @@ export default function CategoryGrid({ counts }) {
           aside={
             <Link
               to="/product-list"
-              className="hidden font-mono text-[10px] uppercase tracking-wider text-navy/50 transition hover:text-[#D45627] sm:block"
+              className="hidden font-mono text-[10px] uppercase tracking-wider text-slate-500 transition hover:text-[#FF7F50] sm:block"
             >
               View all products &rarr;
             </Link>
@@ -50,26 +50,25 @@ export default function CategoryGrid({ counts }) {
             <Link
               key={cat.value}
               to={`/product-list?category=${encodeURIComponent(cat.value)}`}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-navy/10 bg-paper/40 p-5 shadow-card transition duration-300 hover:-translate-y-1 hover:border-[#FF7F50]/50 hover:bg-white hover:shadow-lift"
+              className="category-iso-card group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-100 p-5 hover:border-[#FF7F50]/40"
             >
               <span
                 aria-hidden="true"
-                className="absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-10 transition group-hover:opacity-25"
-                style={{ backgroundColor: cat.color }}
+                className={`category-iso-illustration category-iso-${cat.value} pointer-events-none absolute -right-2 -top-2 h-20 w-20 sm:h-24 sm:w-24`}
               />
 
               <div>
-                <h3 className="font-display text-lg font-semibold leading-tight text-navy">
+                <h3 className="font-display text-lg font-semibold leading-tight text-[#1E293B] transition-colors group-hover:text-[#0F766E]">
                   {cat.label}
                 </h3>
                 {cat.subcategories.length > 0 && (
-                  <p className="mt-2 line-clamp-1 text-[11px] leading-relaxed text-navy/55">
+                  <p className="mt-2 line-clamp-1 text-[11px] leading-relaxed text-slate-500">
                     {cat.subcategories.join(" · ")}
                   </p>
                 )}
               </div>
 
-              <span className="mt-4 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[#FF7F50] font-semibold">
+              <span className="mt-4 inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#FF7F50]">
                 Explore
                 <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </span>
